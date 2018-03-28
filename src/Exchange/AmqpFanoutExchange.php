@@ -10,7 +10,7 @@ use Qlimix\Queue\Envelope\EnvelopeInterface;
 use Qlimix\Queue\Exchange\Exception\TimeOutException;
 use Qlimix\Queue\Exchange\Exception\UnacknowledgedException;
 
-final class AmqpExchange implements ExchangeInterface
+final class AmqpFanoutExchange implements ExchangeInterface
 {
     private const TIMEOUT = 1;
 
