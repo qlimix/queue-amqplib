@@ -39,7 +39,7 @@ final class AmqpFanoutExchange implements ExchangeInterface
         $channel = $this->getChannel();
 
         $channel->basic_publish(new AMQPMessage(
-                json_encode($envelope->getMessage()->serialize()),
+                $envelope->getMessage(),
                 ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]
             ),
             $envelope->getRoute(),
