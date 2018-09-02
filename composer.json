@@ -13,7 +13,8 @@
             "Qlimix\\Queue\\": "src/"
         }
     },
-    "require-dev": {
+    "require": {
+        "php-amqplib/php-amqplib": "^2.7",
         "qlimix/queue": "dev-master"
     },
     "suggest": {
@@ -25,9 +26,12 @@
         {
             "type": "vcs",
             "url":  "git@bitbucket.org:qlimix/queue.git"
+        },
+        {
+            "type": "vcs",
+            "url":  "git@bitbucket.org:qlimix/serializable.git"
         }
     ],
-    "require": {
-        "php-amqplib/php-amqplib": "^2.7"
-    }
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
