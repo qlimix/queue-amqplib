@@ -12,6 +12,14 @@ final class AmqpQueueConsumer implements QueueConsumerInterface
     private $fetcher;
 
     /**
+     * @param AmqpMessageFetcher $fetcher
+     */
+    public function __construct(AmqpMessageFetcher $fetcher)
+    {
+        $this->fetcher = $fetcher;
+    }
+
+    /**
      * @inheritDoc
      */
     public function consume(): array
