@@ -53,6 +53,6 @@ final class AmqpMessageFetcher
 
     public function acknowledge(QueueMessage $message): void
     {
-        $this->channel->basic_ack($message->getJob()->getId());
+        $this->channel->basic_ack($message->getId());
     }
 }
