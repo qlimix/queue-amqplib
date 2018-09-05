@@ -5,7 +5,7 @@ namespace Qlimix\Queue\Exchange;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Exception\AMQPTimeoutException;
 use PhpAmqpLib\Message\AMQPMessage;
-use Qlimix\Queue\Amqp\AmqpConnectionFactory;
+use Qlimix\Queue\Connection\AmqpConnectionFactory;
 use Qlimix\Queue\Envelope\EnvelopeInterface;
 use Qlimix\Queue\Exchange\Exception\TimeOutException;
 use Qlimix\Queue\Exchange\Exception\UnacknowledgedException;
