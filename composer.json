@@ -26,10 +26,6 @@
         {
             "type": "vcs",
             "url":  "git@bitbucket.org:qlimix/queue.git"
-        },
-        {
-            "type": "vcs",
-            "url":  "git@bitbucket.org:qlimix/serializable.git"
         }
     ],
     "minimum-stability": "dev",
