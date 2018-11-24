@@ -67,9 +67,11 @@ final class AmqpDefaultExchange implements ExchangeInterface
     {
         if ($this->channel === null) {
             $this->channel = $this->amqpConnectionFactory->getConnection()->channel();
-            $this->channel->set_nack_handler(function () {
+            $callback = function () {
                 $this->nack = true;
-            });
+            };
+            $this->channel->set_nack_handler($callback);
+            $this->channel->set_return_listener($callback);
             $this->channel->confirm_select();
         }
 
