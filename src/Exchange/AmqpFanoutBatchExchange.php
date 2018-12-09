@@ -25,7 +25,7 @@ final class AmqpFanoutBatchExchange implements BatchExchangeInterface
     private $failedMessages;
 
     /** @var EnvelopeInterface[] */
-    private $envelopes;
+    private $messages;
 
     /**
      * @param AmqpConnectionFactory $amqpConnectionFactory
@@ -38,20 +38,20 @@ final class AmqpFanoutBatchExchange implements BatchExchangeInterface
     /**
      * @inheritDoc
      */
-    public function exchange(array $envelopes): void
+    public function exchange(array $messages): void
     {
-        $this->envelopes = $envelopes;
+        $this->messages = $messages;
         $channel = $this->getChannel();
 
-        foreach ($envelopes as $index => $envelope) {
+        foreach ($messages as $index => $message) {
             $channel->batch_basic_publish(new AMQPMessage(
-                $envelope->getMessage(),
+                $message->getMessage(),
                 [
                     'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT,
                     'message_id' => $index
                 ]
             ),
-                $envelope->getRoute(),
+                $message->getRoute(),
                 null,
                 true
             );
@@ -66,12 +66,12 @@ final class AmqpFanoutBatchExchange implements BatchExchangeInterface
         try {
             $channel->wait_for_pending_acks_returns(self::TIMEOUT);
         } catch (AMQPTimeoutException $exception) {
-            throw new TimeOutException('Delivering envelopes to exchange timed out', 0, $exception);
+            throw new TimeOutException('Delivering messages to exchange timed out', 0, $exception);
         }
 
         if (count($this->failedMessages) > 0) {
             $this->failedMessages = [];
-            throw new UnacknowledgedException('Envelopes were not acknowledged by the server');
+            throw new UnacknowledgedException('Message were not acknowledged by the server');
         }
     }
 
@@ -83,7 +83,7 @@ final class AmqpFanoutBatchExchange implements BatchExchangeInterface
         if ($this->channel === null) {
             $this->channel = $this->amqpConnectionFactory->getConnection()->channel();
             $callback = function (AMQPMessage $message) {
-                $this->failedMessages[] = $this->envelopes[$message->get('message_id')];
+                $this->failedMessages[] = $this->messages[$message->get('message_id')];
             };
             $this->channel->set_nack_handler($callback);
             $this->channel->set_return_listener($callback);

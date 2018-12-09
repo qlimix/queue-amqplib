@@ -10,11 +10,13 @@
     ],
     "autoload": {
         "psr-4": {
-            "Qlimix\\Queue\\": "src/"
+            "Qlimix\\Queue\\": "src/",
+            "Qlimix\\Providers\\QueueAMQPLib\\": "providers/"
         }
     },
     "require": {
         "php-amqplib/php-amqplib": "^2.7",
+        "qlimix/dependency-container": "dev-master",
         "qlimix/queue": "dev-master"
     },
     "suggest": {
@@ -26,6 +28,14 @@
         {
             "type": "vcs",
             "url":  "git@bitbucket.org:qlimix/queue.git"
+        },
+        {
+            "type": "vcs",
+            "url":  "git@bitbucket.org:qlimix/dependency-container.git"
+        },
+        {
+            "type": "vcs",
+            "url":  "git@bitbucket.org:qlimix/serialize.git"
         }
     ],
     "minimum-stability": "dev",

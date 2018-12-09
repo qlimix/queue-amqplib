@@ -25,7 +25,7 @@ final class AmqpDefaultBatchExchange implements BatchExchangeInterface
     private $failedMessages;
 
     /** @var EnvelopeInterface[] */
-    private $envelopes;
+    private $messages;
 
     /**
      * @param AmqpConnectionFactory $amqpConnectionFactory
@@ -38,21 +38,21 @@ final class AmqpDefaultBatchExchange implements BatchExchangeInterface
     /**
      * @inheritDoc
      */
-    public function exchange(array $envelopes): void
+    public function exchange(array $messages): void
     {
-        $this->envelopes = $envelopes;
+        $this->messages = $messages;
         $channel = $this->getChannel();
 
-        foreach ($this->envelopes as $index => $envelope) {
+        foreach ($this->messages as $index => $message) {
             $channel->batch_basic_publish(new AMQPMessage(
-                    $envelope->getMessage(),
+                    $message->getMessage(),
                     [
                         'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT,
                         'message_id' => $index
                     ]
                 ),
                 null,
-                $envelope->getRoute(),
+                $message->getRoute(),
                 true
             );
         }
@@ -60,18 +60,18 @@ final class AmqpDefaultBatchExchange implements BatchExchangeInterface
         try {
             $this->channel->publish_batch();
         } catch (\Throwable $exception) {
-            throw new ExchangeException('Failed batch public', 0, $exception);
+            throw new ExchangeException('Failed batch publish', 0, $exception);
         }
 
         try {
             $channel->wait_for_pending_acks_returns(self::TIMEOUT);
         } catch (AMQPTimeoutException $exception) {
-            throw new TimeOutException('Delivering envelopes to exchange timed out', 0, $exception);
+            throw new TimeOutException('Delivering messages to exchange timed out', 0, $exception);
         }
 
         if (count($this->failedMessages) > 0) {
             $this->failedMessages = [];
-            throw new UnacknowledgedException('Envelopes were not acknowledged by the server');
+            throw new UnacknowledgedException('Messages were not acknowledged by the server');
         }
     }
 
@@ -83,7 +83,7 @@ final class AmqpDefaultBatchExchange implements BatchExchangeInterface
         if ($this->channel === null) {
             $this->channel = $this->amqpConnectionFactory->getConnection()->channel();
             $callback = function (AMQPMessage $message) {
-                $this->failedMessages[] = $this->envelopes[$message->get('message_id')];
+                $this->failedMessages[] = $this->messages[$message->get('message_id')];
             };
             $this->channel->set_nack_handler($callback);
             $this->channel->set_return_listener($callback);

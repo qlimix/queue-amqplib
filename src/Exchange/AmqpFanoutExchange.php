@@ -6,7 +6,6 @@ use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Exception\AMQPTimeoutException;
 use PhpAmqpLib\Message\AMQPMessage;
 use Qlimix\Queue\Connection\AmqpConnectionFactory;
-use Qlimix\Queue\Envelope\EnvelopeInterface;
 use Qlimix\Queue\Exchange\Exception\TimeOutException;
 use Qlimix\Queue\Exchange\Exception\UnacknowledgedException;
 
@@ -34,15 +33,15 @@ final class AmqpFanoutExchange implements ExchangeInterface
     /**
      * @inheritDoc
      */
-    public function exchange(EnvelopeInterface $envelope): void
+    public function exchange(ExchangeMessage $message): void
     {
         $channel = $this->getChannel();
 
         $channel->basic_publish(new AMQPMessage(
-                $envelope->getMessage(),
+                $message->getMessage(),
                 ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]
             ),
-            $envelope->getRoute(),
+            $message->getRoute(),
             null,
             true
         );
@@ -50,11 +49,11 @@ final class AmqpFanoutExchange implements ExchangeInterface
         try {
             $channel->wait_for_pending_acks_returns(self::TIMEOUT);
         } catch (AMQPTimeoutException $exception) {
-            throw new TimeOutException('Delivering envelope to exchange timed out', 0, $exception);
+            throw new TimeOutException('Delivering message to exchange timed out', 0, $exception);
         }
 
         if ($this->nack) {
-            throw new UnacknowledgedException('Envelope was not acknowledged by the server');
+            throw new UnacknowledgedException('Message was not acknowledged by the server');
         }
 
         $this->nack = false;
