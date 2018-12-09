@@ -5,7 +5,7 @@ namespace Qlimix\Providers\QueueAMQPLib;
 use Psr\Container\ContainerInterface;
 use Qlimix\DependencyContainer\DependencyProviderInterface;
 use Qlimix\DependencyContainer\DependencyRegistryInterface;
-use Qlimix\DependencyContainer\Exception\DependencyProviderException;
+use Qlimix\Queue\Connection\AmqpConnectionFactory;
 use Qlimix\Queue\Exchange\AmqpDefaultBatchExchange;
 use Qlimix\Queue\Exchange\AmqpDefaultExchange;
 use Qlimix\Queue\Exchange\AmqpFanoutBatchExchange;
@@ -19,19 +19,27 @@ final class AMQPLibExchangeServiceProvider implements DependencyProviderInterfac
     public function provide(DependencyRegistryInterface $registry): void
     {
         $registry->set(AmqpDefaultBatchExchange::class, function (ContainerInterface $container) {
-
+            return new AmqpDefaultBatchExchange(
+                $container->get(AmqpConnectionFactory::class)
+            );
         });
 
         $registry->set(AmqpDefaultExchange::class, function (ContainerInterface $container) {
-
+            return new AmqpDefaultBatchExchange(
+                $container->get(AmqpConnectionFactory::class)
+            );
         });
 
         $registry->set(AmqpFanoutBatchExchange::class, function (ContainerInterface $container) {
-
+            return new AmqpFanoutBatchExchange(
+                $container->get(AmqpConnectionFactory::class)
+            );
         });
 
         $registry->set(AmqpFanoutExchange::class, function (ContainerInterface $container) {
-
+            return new AmqpFanoutExchange(
+                $container->get(AmqpConnectionFactory::class)
+            );
         });
     }
 }
