@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Qlimix\Providers\QueueAMQPLib;
+namespace Qlimix\Queue\Providers\QueueAMQPLib;
 
 use Psr\Container\ContainerInterface;
 use Qlimix\DependencyContainer\DependencyProviderInterface;
@@ -10,6 +10,7 @@ use Qlimix\Queue\Connection\AmqpConnectionFactory;
 use Qlimix\Queue\Consumer\AmqpMessageFetcher;
 use Qlimix\Queue\Consumer\AmqpMessageHolder;
 use Qlimix\Queue\Consumer\AmqpQueueConsumer;
+use Qlimix\Queue\Consumer\QueueConsumerInterface;
 
 final class AMQPLibConsumerServiceProvider implements DependencyProviderInterface
 {
@@ -38,7 +39,7 @@ final class AMQPLibConsumerServiceProvider implements DependencyProviderInterfac
            );
         });
 
-        $registry->set(AmqpQueueConsumer::class, function (ContainerInterface $container) {
+        $registry->set(QueueConsumerInterface::class, function (ContainerInterface $container) {
             return new AmqpQueueConsumer(
                 $container->get(AmqpMessageFetcher::class)
             );

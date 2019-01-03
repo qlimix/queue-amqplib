@@ -10,8 +10,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Qlimix\\Queue\\": "src/",
-            "Qlimix\\Providers\\QueueAMQPLib\\": "providers/"
+            "Qlimix\\Queue\\": "src/"
         }
     },
     "require": {

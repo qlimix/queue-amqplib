@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Qlimix\Providers\QueueAMQPLib;
+namespace Qlimix\Queue\Providers\QueueAMQPLib;
 
 use Psr\Container\ContainerInterface;
 use Qlimix\DependencyContainer\DependencyProviderInterface;
