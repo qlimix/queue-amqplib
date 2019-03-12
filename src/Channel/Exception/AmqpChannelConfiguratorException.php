@@ -2,6 +2,8 @@
 
 namespace Qlimix\Queue\Channel\Exception;
 
-final class AmqpChannelConfiguratorException extends \Exception
+use Exception;
+
+final class AmqpChannelConfiguratorException extends Exception
 {
 }

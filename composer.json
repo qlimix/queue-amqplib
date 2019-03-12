@@ -18,7 +18,8 @@
         "qlimix/dependency-container": "dev-master",
         "qlimix/queue": "dev-master"
     },
-    "suggest": {
+    "require-dev": {
+        "qlimix/code-standard": "dev-master"
     },
     "config": {
         "sort-packages": true
@@ -35,6 +36,14 @@
         {
             "type": "vcs",
             "url":  "git@bitbucket.org:qlimix/serialize.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@bitbucket.org:qlimix/codesniffer-standard.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@bitbucket.org:qlimix/code-standard.git"
         }
     ],
     "minimum-stability": "dev",

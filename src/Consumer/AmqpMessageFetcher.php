@@ -7,6 +7,7 @@ use PhpAmqpLib\Message\AMQPMessage;
 use Qlimix\Queue\Channel\AmqpChannelConfiguratorInterface;
 use Qlimix\Queue\Consumer\Exception\QueueConsumerException;
 use Qlimix\Queue\Queue\QueueMessage;
+use Throwable;
 
 final class AmqpMessageFetcher
 {
@@ -16,10 +17,6 @@ final class AmqpMessageFetcher
     /** @var AmqpMessageHolder */
     private $holder;
 
-    /**
-     * @param AmqpChannelConfiguratorInterface $amqpChannelConfigurator
-     * @param AmqpMessageHolder $holder
-     */
     public function __construct(AmqpChannelConfiguratorInterface $amqpChannelConfigurator, AmqpMessageHolder $holder)
     {
         $this->amqpChannelConfigurator = $amqpChannelConfigurator;
@@ -38,21 +35,19 @@ final class AmqpMessageFetcher
             return $this->holder->empty();
         } catch (AMQPTimeoutException $exception) {
             return $this->holder->empty();
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             throw new QueueConsumerException('Failed to fetch messages', 0, $exception);
         }
     }
 
     /**
-     * @param QueueMessage $message
-     *
      * @throws QueueConsumerException
      */
     public function acknowledge(QueueMessage $message): void
     {
         try {
             $this->amqpChannelConfigurator->getChannel()->basic_ack($message->getId());
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             throw new QueueConsumerException('Failed to acknowledge message', 0, $exception);
         }
     }

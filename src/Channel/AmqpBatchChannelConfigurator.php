@@ -20,15 +20,9 @@ final class AmqpBatchChannelConfigurator implements AmqpChannelConfiguratorInter
     /** @var int */
     private $amount;
 
-    /** @var null|AMQPChannel */
+    /** @var AMQPChannel|null */
     private $channel;
 
-    /**
-     * @param AmqpConnectionFactory $connectionFactory
-     * @param AmqpMessageHolder $amqpMessageHolder
-     * @param string $queue
-     * @param int $amount
-     */
     public function __construct(
         AmqpConnectionFactory $connectionFactory,
         AmqpMessageHolder $amqpMessageHolder,
@@ -46,7 +40,6 @@ final class AmqpBatchChannelConfigurator implements AmqpChannelConfiguratorInter
         if ($this->channel === null) {
             $this->channel = $this->connectionFactory->getConnection()->channel();
             $this->channel->basic_qos(0, $this->amount, false);
-            $messageHolder = $this->amqpMessageHolder;
             $this->channel->basic_consume(
                 $this->queue,
                 '',
@@ -54,8 +47,8 @@ final class AmqpBatchChannelConfigurator implements AmqpChannelConfiguratorInter
                 false,
                 false,
                 false,
-                function ($message) use ($messageHolder) {
-                    $messageHolder->addMessage($message);
+                function ($message): void {
+                    $this->amqpMessageHolder->addMessage($message);
                 }
             );
         }

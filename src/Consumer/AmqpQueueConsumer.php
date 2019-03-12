@@ -5,15 +5,13 @@ namespace Qlimix\Queue\Consumer;
 use PhpAmqpLib\Message\AMQPMessage;
 use Qlimix\Queue\Consumer\Exception\QueueConsumerException;
 use Qlimix\Queue\Queue\QueueMessage;
+use Throwable;
 
 final class AmqpQueueConsumer implements QueueConsumerInterface
 {
     /** @var AmqpMessageFetcher */
     private $fetcher;
 
-    /**
-     * @param AmqpMessageFetcher $fetcher
-     */
     public function __construct(AmqpMessageFetcher $fetcher)
     {
         $this->fetcher = $fetcher;
@@ -26,7 +24,7 @@ final class AmqpQueueConsumer implements QueueConsumerInterface
     {
         try {
             return $this->convertToQueueMessages($this->fetcher->fetch());
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             throw new QueueConsumerException('Failed to consume', 0, $exception);
         }
     }
@@ -42,7 +40,7 @@ final class AmqpQueueConsumer implements QueueConsumerInterface
     /**
      * @param AMQPMessage[] $amqpMessages
      *
-     * @return array
+     * @return QueueMessage[]
      */
     private function convertToQueueMessages(array $amqpMessages): array
     {
@@ -50,7 +48,7 @@ final class AmqpQueueConsumer implements QueueConsumerInterface
         foreach ($amqpMessages as $amqpMessage) {
             $queueMessages[] = new QueueMessage(
                 $amqpMessage->delivery_info['delivery_tag'],
-                (string)$amqpMessage->body
+                $amqpMessage->body
             );
         }
 

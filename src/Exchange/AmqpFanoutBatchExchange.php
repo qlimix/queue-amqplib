@@ -6,10 +6,11 @@ use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Exception\AMQPTimeoutException;
 use PhpAmqpLib\Message\AMQPMessage;
 use Qlimix\Queue\Connection\AmqpConnectionFactory;
-use Qlimix\Queue\Envelope\EnvelopeInterface;
 use Qlimix\Queue\Exchange\Exception\ExchangeException;
 use Qlimix\Queue\Exchange\Exception\TimeOutException;
 use Qlimix\Queue\Exchange\Exception\UnacknowledgedException;
+use Throwable;
+use function count;
 
 final class AmqpFanoutBatchExchange implements BatchExchangeInterface
 {
@@ -21,15 +22,9 @@ final class AmqpFanoutBatchExchange implements BatchExchangeInterface
     /** @var AMQPChannel */
     private $channel;
 
-    /** @var AMQPMessage[] */
+    /** @var string[] */
     private $failedMessages;
 
-    /** @var EnvelopeInterface[] */
-    private $messages;
-
-    /**
-     * @param AmqpConnectionFactory $amqpConnectionFactory
-     */
     public function __construct(AmqpConnectionFactory $amqpConnectionFactory)
     {
         $this->amqpConnectionFactory = $amqpConnectionFactory;
@@ -40,26 +35,26 @@ final class AmqpFanoutBatchExchange implements BatchExchangeInterface
      */
     public function exchange(array $messages): void
     {
-        $this->messages = $messages;
         $channel = $this->getChannel();
 
         foreach ($messages as $index => $message) {
-            $channel->batch_basic_publish(new AMQPMessage(
-                $message->getMessage(),
-                [
-                    'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT,
-                    'message_id' => $index
-                ]
-            ),
+            $channel->batch_basic_publish(
+                new AMQPMessage(
+                    $message->getMessage(),
+                    [
+                        'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT,
+                        'message_id' => $index,
+                    ]
+                ),
                 $message->getRoute(),
-                null,
+                '',
                 true
             );
         }
 
         try {
             $this->channel->publish_batch();
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             throw new ExchangeException('Failed batch public', 0, $exception);
         }
 
@@ -75,15 +70,12 @@ final class AmqpFanoutBatchExchange implements BatchExchangeInterface
         }
     }
 
-    /**
-     * @return AMQPChannel
-     */
     private function getChannel(): AMQPChannel
     {
         if ($this->channel === null) {
             $this->channel = $this->amqpConnectionFactory->getConnection()->channel();
-            $callback = function (AMQPMessage $message) {
-                $this->failedMessages[] = $this->messages[$message->get('message_id')];
+            $callback = function (AMQPMessage $message): void {
+                $this->failedMessages[] = $message->get('message_id');
             };
             $this->channel->set_nack_handler($callback);
             $this->channel->set_return_listener($callback);

@@ -22,9 +22,6 @@ final class AmqpDefaultExchange implements ExchangeInterface
     /** @var bool */
     private $nack;
 
-    /**
-     * @param AmqpConnectionFactory $amqpConnectionFactory
-     */
     public function __construct(AmqpConnectionFactory $amqpConnectionFactory)
     {
         $this->amqpConnectionFactory = $amqpConnectionFactory;
@@ -37,11 +34,12 @@ final class AmqpDefaultExchange implements ExchangeInterface
     {
         $channel = $this->getChannel();
 
-        $channel->basic_publish(new AMQPMessage(
+        $channel->basic_publish(
+            new AMQPMessage(
                 $message->getMessage(),
                 ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]
             ),
-            null,
+            '',
             $message->getRoute(),
             true
         );
@@ -59,14 +57,11 @@ final class AmqpDefaultExchange implements ExchangeInterface
         $this->nack = false;
     }
 
-    /**
-     * @return AMQPChannel
-     */
     private function getChannel(): AMQPChannel
     {
         if ($this->channel === null) {
             $this->channel = $this->amqpConnectionFactory->getConnection()->channel();
-            $callback = function () {
+            $callback = function (): void {
                 $this->nack = true;
             };
             $this->channel->set_nack_handler($callback);
