@@ -24,13 +24,6 @@ final class AmqpConnectionFactory
     /** @var AMQPStreamConnection */
     private $connection;
 
-    /**
-     * @param string $host
-     * @param int $port
-     * @param string $vhost
-     * @param string $user
-     * @param string $password
-     */
     public function __construct(string $host, int $port, string $vhost, string $user, string $password)
     {
         $this->host = $host;
@@ -40,15 +33,12 @@ final class AmqpConnectionFactory
         $this->password = $password;
     }
 
-    /**
-     * @return AMQPStreamConnection
-     */
     public function getConnection(): AMQPStreamConnection
     {
         if ($this->connection === null) {
             $this->connection = new AMQPStreamConnection(
                 $this->host,
-                $this->port,
+                (string) $this->port,
                 $this->user,
                 $this->password,
                 $this->vhost

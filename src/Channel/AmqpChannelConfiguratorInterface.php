@@ -8,8 +8,6 @@ use Qlimix\Queue\Channel\Exception\AmqpChannelConfiguratorException;
 interface AmqpChannelConfiguratorInterface
 {
     /**
-     * @return AMQPChannel
-     *
      * @throws AmqpChannelConfiguratorException
      */
     public function getChannel(): AMQPChannel;
