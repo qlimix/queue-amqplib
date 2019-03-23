@@ -18,25 +18,25 @@ final class AMQPLibExchangeServiceProvider implements ProviderInterface
      */
     public function provide(RegistryInterface $registry): void
     {
-        $registry->set(AmqpDefaultBatchExchange::class, static function (ContainerInterface $container) {
+        $registry->setMaker(AmqpDefaultBatchExchange::class, static function (ContainerInterface $container) {
             return new AmqpDefaultBatchExchange(
                 $container->get(AmqpConnectionFactory::class)
             );
         });
 
-        $registry->set(AmqpDefaultExchange::class, static function (ContainerInterface $container) {
+        $registry->setMaker(AmqpDefaultExchange::class, static function (ContainerInterface $container) {
             return new AmqpDefaultBatchExchange(
                 $container->get(AmqpConnectionFactory::class)
             );
         });
 
-        $registry->set(AmqpFanoutBatchExchange::class, static function (ContainerInterface $container) {
+        $registry->setMaker(AmqpFanoutBatchExchange::class, static function (ContainerInterface $container) {
             return new AmqpFanoutBatchExchange(
                 $container->get(AmqpConnectionFactory::class)
             );
         });
 
-        $registry->set(AmqpFanoutExchange::class, static function (ContainerInterface $container) {
+        $registry->setMaker(AmqpFanoutExchange::class, static function (ContainerInterface $container) {
             return new AmqpFanoutExchange(
                 $container->get(AmqpConnectionFactory::class)
             );
