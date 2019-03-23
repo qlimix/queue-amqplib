@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Qlimix\Queue\Exchange\Constructor;
+namespace Qlimix\Queue\Exchange\Construction;
 
 final class AMQPExchangeOptions
 {

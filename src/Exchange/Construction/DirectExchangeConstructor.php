@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Qlimix\Queue\Exchange\Constructor;
+namespace Qlimix\Queue\Exchange\Construction;
 
 use PhpAmqpLib\Exchange\AMQPExchangeType;
 use Qlimix\Queue\Connection\AmqpConnectionFactory;
-use Qlimix\Queue\Exchange\Constructor\Exception\ConstructorException;
+use Qlimix\Queue\Exchange\Construction\Exception\ConstructorException;
 use Throwable;
 
-final class FanoutExchangeConstructor implements ConstructorInterface
+final class DirectExchangeConstructor implements ConstructorInterface
 {
     /** @var AmqpConnectionFactory */
     private $connectionFactory;
@@ -29,7 +29,7 @@ final class FanoutExchangeConstructor implements ConstructorInterface
         try {
             $this->connectionFactory->getConnection()->channel()->exchange_declare(
                 $exchange,
-                AMQPExchangeType::FANOUT,
+                AMQPExchangeType::DIRECT,
                 $this->options->isPassive(),
                 $this->options->isDurable(),
                 $this->options->isAutoDelete(),
