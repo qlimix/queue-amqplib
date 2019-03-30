@@ -6,7 +6,7 @@ use Qlimix\Queue\Connection\AmqpConnectionFactory;
 use Qlimix\Queue\Queue\Construction\Exception\ConstructorException;
 use Throwable;
 
-final class AmqpQueueConstructor implements ConstructorInterface
+final class AmqpConstructor implements ConstructorInterface
 {
     /** @var AmqpConnectionFactory */
     private $connectionFactory;
