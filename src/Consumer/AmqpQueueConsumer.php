@@ -9,10 +9,10 @@ use Throwable;
 
 final class AmqpQueueConsumer implements QueueConsumerInterface
 {
-    /** @var AmqpMessageFetcher */
+    /** @var AmqpMessageFetcherInterface */
     private $fetcher;
 
-    public function __construct(AmqpMessageFetcher $fetcher)
+    public function __construct(AmqpMessageFetcherInterface $fetcher)
     {
         $this->fetcher = $fetcher;
     }

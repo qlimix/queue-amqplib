@@ -3,18 +3,18 @@
 namespace Qlimix\Queue\Binding;
 
 use Qlimix\Queue\Binding\Exception\BindingException;
-use Qlimix\Queue\Connection\AmqpConnectionFactory;
+use Qlimix\Queue\Connection\AmqpConnectionFactoryInterface;
 use Throwable;
 
 final class AmqpDirectBinding implements BindingInterface
 {
-    /** @var AmqpConnectionFactory */
+    /** @var AmqpConnectionFactoryInterface */
     private $connectionFactory;
 
     /** @var string */
     private $routingKey;
 
-    public function __construct(AmqpConnectionFactory $connectionFactory, string $routingKey = '')
+    public function __construct(AmqpConnectionFactoryInterface $connectionFactory, string $routingKey = '')
     {
         $this->connectionFactory = $connectionFactory;
         $this->routingKey = $routingKey;

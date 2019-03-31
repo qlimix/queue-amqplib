@@ -3,15 +3,15 @@
 namespace Qlimix\Queue\Channel;
 
 use PhpAmqpLib\Channel\AMQPChannel;
-use Qlimix\Queue\Connection\AmqpConnectionFactory;
-use Qlimix\Queue\Consumer\AmqpMessageHolder;
+use Qlimix\Queue\Connection\AmqpConnectionFactoryInterface;
+use Qlimix\Queue\Consumer\AmqpMessageHolderInterface;
 
 final class AmqpBatchChannelConfigurator implements AmqpChannelConfiguratorInterface
 {
-    /** @var AmqpConnectionFactory */
+    /** @var AmqpConnectionFactoryInterface */
     private $connectionFactory;
 
-    /** @var AmqpMessageHolder */
+    /** @var AmqpMessageHolderInterface */
     private $amqpMessageHolder;
 
     /** @var string */
@@ -24,8 +24,8 @@ final class AmqpBatchChannelConfigurator implements AmqpChannelConfiguratorInter
     private $channel;
 
     public function __construct(
-        AmqpConnectionFactory $connectionFactory,
-        AmqpMessageHolder $amqpMessageHolder,
+        AmqpConnectionFactoryInterface $connectionFactory,
+        AmqpMessageHolderInterface $amqpMessageHolder,
         string $queue,
         int $amount
     ) {

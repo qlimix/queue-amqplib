@@ -4,7 +4,7 @@ namespace Qlimix\Queue\Consumer;
 
 use PhpAmqpLib\Message\AMQPMessage;
 
-final class AmqpMessageHolder
+final class AmqpMessageHolder implements AmqpMessageHolderInterface
 {
     /** @var AMQPMessage[] */
     private $messages = [];

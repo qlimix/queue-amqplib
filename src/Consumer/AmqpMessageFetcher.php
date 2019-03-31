@@ -9,15 +9,15 @@ use Qlimix\Queue\Consumer\Exception\QueueConsumerException;
 use Qlimix\Queue\Queue\QueueMessage;
 use Throwable;
 
-final class AmqpMessageFetcher
+final class AmqpMessageFetcher implements AmqpMessageFetcherInterface
 {
     /** @var AmqpChannelConfiguratorInterface */
     private $amqpChannelConfigurator;
 
-    /** @var AmqpMessageHolder */
+    /** @var AmqpMessageHolderInterface */
     private $holder;
 
-    public function __construct(AmqpChannelConfiguratorInterface $amqpChannelConfigurator, AmqpMessageHolder $holder)
+    public function __construct(AmqpChannelConfiguratorInterface $amqpChannelConfigurator, AmqpMessageHolderInterface $holder)
     {
         $this->amqpChannelConfigurator = $amqpChannelConfigurator;
         $this->holder = $holder;

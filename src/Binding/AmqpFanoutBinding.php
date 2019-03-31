@@ -3,15 +3,15 @@
 namespace Qlimix\Queue\Binding;
 
 use Qlimix\Queue\Binding\Exception\BindingException;
-use Qlimix\Queue\Connection\AmqpConnectionFactory;
+use Qlimix\Queue\Connection\AmqpConnectionFactoryInterface;
 use Throwable;
 
 final class AmqpFanoutBinding implements BindingInterface
 {
-    /** @var AmqpConnectionFactory */
+    /** @var AmqpConnectionFactoryInterface */
     private $connectionFactory;
 
-    public function __construct(AmqpConnectionFactory $connectionFactory)
+    public function __construct(AmqpConnectionFactoryInterface $connectionFactory)
     {
         $this->connectionFactory = $connectionFactory;
     }

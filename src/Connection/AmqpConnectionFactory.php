@@ -4,7 +4,7 @@ namespace Qlimix\Queue\Connection;
 
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 
-final class AmqpConnectionFactory
+final class AmqpConnectionFactory implements AmqpConnectionFactoryInterface
 {
     /** @var string */
     private $host;
