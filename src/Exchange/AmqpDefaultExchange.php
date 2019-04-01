@@ -5,7 +5,7 @@ namespace Qlimix\Queue\Exchange;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Exception\AMQPTimeoutException;
 use PhpAmqpLib\Message\AMQPMessage;
-use Qlimix\Queue\Connection\AmqpConnectionFactory;
+use Qlimix\Queue\Connection\AmqpConnectionFactoryInterface;
 use Qlimix\Queue\Exchange\Exception\TimeOutException;
 use Qlimix\Queue\Exchange\Exception\UnacknowledgedException;
 
@@ -13,18 +13,26 @@ final class AmqpDefaultExchange implements ExchangeInterface
 {
     private const TIMEOUT = 1;
 
-    /** @var AmqpConnectionFactory */
+    /** @var AmqpConnectionFactoryInterface */
     private $amqpConnectionFactory;
+
+    /** @var AmqpNegativeAcknowledgeInterface */
+    private $negativeAcknowledge;
+
+    /** @var int */
+    private $deliveryMode;
 
     /** @var AMQPChannel */
     private $channel;
 
-    /** @var bool */
-    private $nack;
-
-    public function __construct(AmqpConnectionFactory $amqpConnectionFactory)
-    {
+    public function __construct(
+        AmqpConnectionFactoryInterface $amqpConnectionFactory,
+        AmqpNegativeAcknowledgeInterface $negativeAcknowledge,
+        int $deliveryMode
+    ) {
         $this->amqpConnectionFactory = $amqpConnectionFactory;
+        $this->negativeAcknowledge = $negativeAcknowledge;
+        $this->deliveryMode = $deliveryMode;
     }
 
     /**
@@ -37,7 +45,7 @@ final class AmqpDefaultExchange implements ExchangeInterface
         $channel->basic_publish(
             new AMQPMessage(
                 $message->getMessage(),
-                ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]
+                ['delivery_mode' => $this->deliveryMode]
             ),
             '',
             $message->getRoute(),
@@ -50,11 +58,10 @@ final class AmqpDefaultExchange implements ExchangeInterface
             throw new TimeOutException('Delivering message to exchange timed out', 0, $exception);
         }
 
-        if ($this->nack) {
+        if ($this->negativeAcknowledge->hasNegativeAcknowledge()) {
+            $this->negativeAcknowledge->reset();
             throw new UnacknowledgedException('Message was not acknowledged by the server');
         }
-
-        $this->nack = false;
     }
 
     private function getChannel(): AMQPChannel
@@ -62,7 +69,7 @@ final class AmqpDefaultExchange implements ExchangeInterface
         if ($this->channel === null) {
             $this->channel = $this->amqpConnectionFactory->getConnection()->channel();
             $callback = function (): void {
-                $this->nack = true;
+                $this->negativeAcknowledge->nack();
             };
             $this->channel->set_nack_handler($callback);
             $this->channel->set_return_listener($callback);

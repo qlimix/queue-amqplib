@@ -2,16 +2,16 @@
 
 namespace Qlimix\Queue\Queue\Construction;
 
-use Qlimix\Queue\Connection\AmqpConnectionFactory;
+use Qlimix\Queue\Connection\AmqpConnectionFactoryInterface;
 use Qlimix\Queue\Queue\Construction\Exception\DestructorException;
 use Throwable;
 
 final class AmqpDestructor implements DestructorInterface
 {
-    /** @var AmqpConnectionFactory */
+    /** @var AmqpConnectionFactoryInterface */
     private $connectionFactory;
 
-    public function __construct(AmqpConnectionFactory $connectionFactory)
+    public function __construct(AmqpConnectionFactoryInterface $connectionFactory)
     {
         $this->connectionFactory = $connectionFactory;
     }

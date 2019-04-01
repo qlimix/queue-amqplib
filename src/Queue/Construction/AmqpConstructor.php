@@ -2,19 +2,19 @@
 
 namespace Qlimix\Queue\Queue\Construction;
 
-use Qlimix\Queue\Connection\AmqpConnectionFactory;
+use Qlimix\Queue\Connection\AmqpConnectionFactoryInterface;
 use Qlimix\Queue\Queue\Construction\Exception\ConstructorException;
 use Throwable;
 
 final class AmqpConstructor implements ConstructorInterface
 {
-    /** @var AmqpConnectionFactory */
+    /** @var AmqpConnectionFactoryInterface */
     private $connectionFactory;
 
     /** @var AmqpQueueOptions */
     private $options;
 
-    public function __construct(AmqpConnectionFactory $connectionFactory, AmqpQueueOptions $options)
+    public function __construct(AmqpConnectionFactoryInterface $connectionFactory, AmqpQueueOptions $options)
     {
         $this->connectionFactory = $connectionFactory;
         $this->options = $options;

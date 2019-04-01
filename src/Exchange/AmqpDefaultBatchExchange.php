@@ -5,29 +5,36 @@ namespace Qlimix\Queue\Exchange;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Exception\AMQPTimeoutException;
 use PhpAmqpLib\Message\AMQPMessage;
-use Qlimix\Queue\Connection\AmqpConnectionFactory;
+use Qlimix\Queue\Connection\AmqpConnectionFactoryInterface;
 use Qlimix\Queue\Exchange\Exception\ExchangeException;
 use Qlimix\Queue\Exchange\Exception\TimeOutException;
 use Qlimix\Queue\Exchange\Exception\UnacknowledgedException;
 use Throwable;
-use function count;
 
 final class AmqpDefaultBatchExchange implements BatchExchangeInterface
 {
     private const TIMEOUT = 1;
 
-    /** @var AmqpConnectionFactory */
+    /** @var AmqpConnectionFactoryInterface */
     private $amqpConnectionFactory;
+
+    /** @var AmqpFailedMessagesHolderInterface */
+    private $failedMessageHolder;
+
+    /** @var int */
+    private $deliveryMode;
 
     /** @var AMQPChannel */
     private $channel;
 
-    /** @var string[] */
-    private $failedMessages;
-
-    public function __construct(AmqpConnectionFactory $amqpConnectionFactory)
-    {
+    public function __construct(
+        AmqpConnectionFactoryInterface $amqpConnectionFactory,
+        AmqpFailedMessagesHolderInterface $failedMessageHolder,
+        int $deliveryMode
+    ) {
         $this->amqpConnectionFactory = $amqpConnectionFactory;
+        $this->failedMessageHolder = $failedMessageHolder;
+        $this->deliveryMode = $deliveryMode;
     }
 
     /**
@@ -42,7 +49,7 @@ final class AmqpDefaultBatchExchange implements BatchExchangeInterface
                 new AMQPMessage(
                     $message->getMessage(),
                     [
-                        'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT,
+                        'delivery_mode' => $this->deliveryMode,
                         'message_id' => $index,
                     ]
                 ),
@@ -64,8 +71,8 @@ final class AmqpDefaultBatchExchange implements BatchExchangeInterface
             throw new TimeOutException('Delivering messages to exchange timed out', 0, $exception);
         }
 
-        if (count($this->failedMessages) > 0) {
-            $this->failedMessages = [];
+        if ($this->failedMessageHolder->hasFailed()) {
+            $this->failedMessageHolder->reset();
             throw new UnacknowledgedException('Messages were not acknowledged by the server');
         }
     }
@@ -75,7 +82,7 @@ final class AmqpDefaultBatchExchange implements BatchExchangeInterface
         if ($this->channel === null) {
             $this->channel = $this->amqpConnectionFactory->getConnection()->channel();
             $callback = function (AMQPMessage $message): void {
-                $this->failedMessages[] = $message->get('message_id');
+                $this->failedMessageHolder->fail((string) $message->get('message_id'));
             };
             $this->channel->set_nack_handler($callback);
             $this->channel->set_return_listener($callback);

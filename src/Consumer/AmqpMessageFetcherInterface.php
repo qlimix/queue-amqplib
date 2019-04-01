@@ -8,7 +8,6 @@ use Qlimix\Queue\Queue\QueueMessage;
 
 interface AmqpMessageFetcherInterface
 {
-
     /**
      * @return AMQPMessage[]
      *
