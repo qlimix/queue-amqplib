@@ -1,18 +1,19 @@
 <?php declare(strict_types=1);
 
-namespace Qlimix\Queue\Channel;
+namespace Qlimix\Queue\Channel\Consumer;
 
 use PhpAmqpLib\Channel\AMQPChannel;
+use Qlimix\Queue\Channel\ChannelProviderInterface;
 use Qlimix\Queue\Connection\AmqpConnectionFactoryInterface;
-use Qlimix\Queue\Consumer\AmqpMessageHolderInterface;
+use Qlimix\Queue\Exchange\Callback\MessageCallback;
 
-final class AmqpBatchChannelConfigurator implements AmqpChannelConfiguratorInterface
+final class BatchChannelProvider implements ChannelProviderInterface
 {
     /** @var AmqpConnectionFactoryInterface */
     private $connectionFactory;
 
-    /** @var AmqpMessageHolderInterface */
-    private $amqpMessageHolder;
+    /** @var MessageCallback */
+    private $messageCallback;
 
     /** @var string */
     private $queue;
@@ -25,12 +26,12 @@ final class AmqpBatchChannelConfigurator implements AmqpChannelConfiguratorInter
 
     public function __construct(
         AmqpConnectionFactoryInterface $connectionFactory,
-        AmqpMessageHolderInterface $amqpMessageHolder,
+        MessageCallback $messageCallback,
         string $queue,
         int $amount
     ) {
         $this->connectionFactory = $connectionFactory;
-        $this->amqpMessageHolder = $amqpMessageHolder;
+        $this->messageCallback = $messageCallback;
         $this->queue = $queue;
         $this->amount = $amount;
     }
@@ -47,9 +48,7 @@ final class AmqpBatchChannelConfigurator implements AmqpChannelConfiguratorInter
                 false,
                 false,
                 false,
-                function ($message): void {
-                    $this->amqpMessageHolder->addMessage($message);
-                }
+                [$this->messageCallback, 'callback']
             );
         }
 

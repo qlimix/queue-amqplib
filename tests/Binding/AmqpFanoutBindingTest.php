@@ -6,7 +6,7 @@ use Exception;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PHPUnit\Framework\TestCase;
-use Qlimix\Queue\Binding\AmqpDirectBinding;
+use Qlimix\Queue\Binding\AmqpFanoutBinding;
 use Qlimix\Queue\Connection\AmqpConnectionFactoryInterface;
 
 final class AmqpFanoutBindingTest extends TestCase
@@ -34,7 +34,7 @@ final class AmqpFanoutBindingTest extends TestCase
             ->method('getConnection')
             ->willReturn($connection);
 
-        $binding = new AmqpDirectBinding($factory);
+        $binding = new AmqpFanoutBinding($factory);
         $binding->bind('exchange', 'queue');
     }
 
@@ -49,7 +49,7 @@ final class AmqpFanoutBindingTest extends TestCase
             ->method('getConnection')
             ->willThrowException(new Exception());
 
-        $binding = new AmqpDirectBinding($factory);
+        $binding = new AmqpFanoutBinding($factory);
 
         $this->expectException(Exception::class);
 

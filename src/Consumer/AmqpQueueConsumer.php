@@ -3,11 +3,11 @@
 namespace Qlimix\Queue\Consumer;
 
 use PhpAmqpLib\Message\AMQPMessage;
-use Qlimix\Queue\Consumer\Exception\QueueConsumerException;
+use Qlimix\Queue\Consumer\Exception\ConsumerException;
 use Qlimix\Queue\Queue\QueueMessage;
 use Throwable;
 
-final class AmqpQueueConsumer implements QueueConsumerInterface
+final class AmqpQueueConsumer implements ConsumerInterface
 {
     /** @var AmqpMessageFetcherInterface */
     private $fetcher;
@@ -25,7 +25,7 @@ final class AmqpQueueConsumer implements QueueConsumerInterface
         try {
             return $this->convertToQueueMessages($this->fetcher->fetch());
         } catch (Throwable $exception) {
-            throw new QueueConsumerException('Failed to consume', 0, $exception);
+            throw new ConsumerException('Failed to consume', 0, $exception);
         }
     }
 

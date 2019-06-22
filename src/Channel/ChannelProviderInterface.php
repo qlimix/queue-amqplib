@@ -3,12 +3,12 @@
 namespace Qlimix\Queue\Channel;
 
 use PhpAmqpLib\Channel\AMQPChannel;
-use Qlimix\Queue\Channel\Exception\AmqpChannelConfiguratorException;
+use Qlimix\Queue\Channel\Exception\ChannelProviderException;
 
-interface AmqpChannelConfiguratorInterface
+interface ChannelProviderInterface
 {
     /**
-     * @throws AmqpChannelConfiguratorException
+     * @throws ChannelProviderException
      */
     public function getChannel(): AMQPChannel;
 }

@@ -4,6 +4,6 @@ namespace Qlimix\Queue\Channel\Exception;
 
 use Exception;
 
-final class AmqpChannelConfiguratorException extends Exception
+final class ChannelProviderException extends Exception
 {
 }

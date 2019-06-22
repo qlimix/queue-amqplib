@@ -6,7 +6,7 @@ interface AmqpNegativeAcknowledgeInterface
 {
     public function nack(): void;
 
-    public function hasNegativeAcknowledge(): bool;
+    public function has(): bool;
 
     public function reset(): void;
 }

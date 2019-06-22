@@ -1,20 +1,21 @@
 <?php declare(strict_types=1);
 
-namespace Qlimix\Tests\Queue\Channel;
+namespace Qlimix\Tests\Queue\Channel\Consumer;
 
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PHPUnit\Framework\TestCase;
-use Qlimix\Queue\Channel\AmqpBatchChannelConfigurator;
+use Qlimix\Queue\Channel\Consumer\BatchChannelProvider;
 use Qlimix\Queue\Connection\AmqpConnectionFactoryInterface;
 use Qlimix\Queue\Consumer\AmqpMessageHolderInterface;
+use Qlimix\Queue\Exchange\Callback\MessageCallback;
 
-final class AmqpBatchChannelConfiguratorTest extends TestCase
+final class BatchChannelProviderTest extends TestCase
 {
     /**
      * @test
      */
-    public function shouldConfigure(): void
+    public function shouldProvide(): void
     {
         $fetchAmount = 10;
         $configuredQueue = 'test';
@@ -46,9 +47,14 @@ final class AmqpBatchChannelConfiguratorTest extends TestCase
 
         $holder = $this->createMock(AmqpMessageHolderInterface::class);
 
-        $batchChannelConfigurator = new AmqpBatchChannelConfigurator($factory, $holder, $configuredQueue, $fetchAmount);
+        $batchChannelProvider = new BatchChannelProvider(
+            $factory,
+            new MessageCallback($holder),
+            $configuredQueue,
+            $fetchAmount
+        );
 
-        $amqpChannel = $batchChannelConfigurator->getChannel();
+        $amqpChannel = $batchChannelProvider->getChannel();
 
         $this->assertSame($amqpChannel, $channel);
     }
@@ -88,7 +94,12 @@ final class AmqpBatchChannelConfiguratorTest extends TestCase
 
         $holder = $this->createMock(AmqpMessageHolderInterface::class);
 
-        $batchChannelConfigurator = new AmqpBatchChannelConfigurator($factory, $holder, $configuredQueue, $fetchAmount);
+        $batchChannelConfigurator = new BatchChannelProvider(
+            $factory,
+            new MessageCallback($holder),
+            $configuredQueue,
+            $fetchAmount
+        );
 
         $batchChannelConfigurator->getChannel();
         $amqpChannel = $batchChannelConfigurator->getChannel();

@@ -15,7 +15,7 @@ final class AmqpNegativeAcknowledgeTest extends TestCase
         $negativeAcknowledge = new AmqpNegativeAcknowledge();
         $negativeAcknowledge->nack();
 
-        $this->assertTrue($negativeAcknowledge->hasNegativeAcknowledge());
+        $this->assertTrue($negativeAcknowledge->has());
     }
 
     /**
@@ -27,7 +27,7 @@ final class AmqpNegativeAcknowledgeTest extends TestCase
         $negativeAcknowledge->nack();
         $negativeAcknowledge->reset();
 
-        $this->assertFalse($negativeAcknowledge->hasNegativeAcknowledge());
+        $this->assertFalse($negativeAcknowledge->has());
     }
 
     /**
@@ -37,6 +37,6 @@ final class AmqpNegativeAcknowledgeTest extends TestCase
     {
         $negativeAcknowledge = new AmqpNegativeAcknowledge();
 
-        $this->assertFalse($negativeAcknowledge->hasNegativeAcknowledge());
+        $this->assertFalse($negativeAcknowledge->has());
     }
 }

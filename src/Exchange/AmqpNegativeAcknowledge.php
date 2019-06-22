@@ -12,7 +12,7 @@ final class AmqpNegativeAcknowledge implements AmqpNegativeAcknowledgeInterface
         $this->nacked = true;
     }
 
-    public function hasNegativeAcknowledge(): bool
+    public function has(): bool
     {
         return $this->nacked;
     }

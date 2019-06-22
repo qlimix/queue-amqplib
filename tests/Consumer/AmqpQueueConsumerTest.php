@@ -7,7 +7,7 @@ use PhpAmqpLib\Message\AMQPMessage;
 use PHPUnit\Framework\TestCase;
 use Qlimix\Queue\Consumer\AmqpMessageFetcherInterface;
 use Qlimix\Queue\Consumer\AmqpQueueConsumer;
-use Qlimix\Queue\Consumer\Exception\QueueConsumerException;
+use Qlimix\Queue\Consumer\Exception\ConsumerException;
 use Qlimix\Queue\Queue\QueueMessage;
 
 final class AmqpQueueConsumerTest extends TestCase
@@ -52,7 +52,7 @@ final class AmqpQueueConsumerTest extends TestCase
 
         $consumer = new AmqpQueueConsumer($fetcher);
 
-        $this->expectException(QueueConsumerException::class);
+        $this->expectException(ConsumerException::class);
 
         $consumer->consume();
     }
@@ -81,11 +81,11 @@ final class AmqpQueueConsumerTest extends TestCase
 
         $fetcher->expects($this->once())
             ->method('acknowledge')
-            ->willThrowException(new QueueConsumerException());
+            ->willThrowException(new ConsumerException());
 
         $consumer = new AmqpQueueConsumer($fetcher);
 
-        $this->expectException(QueueConsumerException::class);
+        $this->expectException(ConsumerException::class);
 
         $consumer->acknowledge(new QueueMessage('1', 'message'));
     }

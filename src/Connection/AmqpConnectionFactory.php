@@ -3,6 +3,8 @@
 namespace Qlimix\Queue\Connection;
 
 use PhpAmqpLib\Connection\AMQPStreamConnection;
+use Qlimix\Queue\Connection\Exception\ConnectionException;
+use Throwable;
 
 final class AmqpConnectionFactory implements AmqpConnectionFactoryInterface
 {
@@ -33,16 +35,23 @@ final class AmqpConnectionFactory implements AmqpConnectionFactoryInterface
         $this->password = $password;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getConnection(): AMQPStreamConnection
     {
         if ($this->connection === null) {
-            $this->connection = new AMQPStreamConnection(
-                $this->host,
-                (string) $this->port,
-                $this->user,
-                $this->password,
-                $this->vhost
-            );
+            try {
+                $this->connection = new AMQPStreamConnection(
+                    $this->host,
+                    (string) $this->port,
+                    $this->user,
+                    $this->password,
+                    $this->vhost
+                );
+            } catch (Throwable $exception) {
+                throw new ConnectionException('Failed to connect to amqp', 0, $exception);
+            }
         }
 
         return $this->connection;

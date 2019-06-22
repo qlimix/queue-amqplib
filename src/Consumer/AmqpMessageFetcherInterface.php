@@ -3,7 +3,7 @@
 namespace Qlimix\Queue\Consumer;
 
 use PhpAmqpLib\Message\AMQPMessage;
-use Qlimix\Queue\Consumer\Exception\QueueConsumerException;
+use Qlimix\Queue\Consumer\Exception\ConsumerException;
 use Qlimix\Queue\Queue\QueueMessage;
 
 interface AmqpMessageFetcherInterface
@@ -11,12 +11,12 @@ interface AmqpMessageFetcherInterface
     /**
      * @return AMQPMessage[]
      *
-     * @throws QueueConsumerException
+     * @throws ConsumerException
      */
     public function fetch(): array;
 
     /**
-     * @throws QueueConsumerException
+     * @throws ConsumerException
      */
     public function acknowledge(QueueMessage $message): void;
 }
