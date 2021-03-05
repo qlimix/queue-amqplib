@@ -44,7 +44,7 @@ final class AmqpMessageFetcher implements AmqpMessageFetcherInterface
     public function acknowledge(QueueMessage $message): void
     {
         try {
-            $this->amqpChannelConfigurator->getChannel()->basic_ack($message->getId());
+            $this->amqpChannelConfigurator->getChannel()->basic_ack((int) $message->getId());
         } catch (Throwable $exception) {
             throw new ConsumerException('Failed to acknowledge message', 0, $exception);
         }

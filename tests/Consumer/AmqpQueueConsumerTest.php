@@ -17,9 +17,9 @@ final class AmqpQueueConsumerTest extends TestCase
         $fetcher = $this->createMock(AmqpMessageFetcherInterface::class);
 
         $mockedMessages = [];
-        for ($i = 0; $i < 3; $i++) {
+        for ($i = 1; $i < 4; $i++) {
             $message = new AMQPMessage('test'.$i);
-            $message->delivery_info['delivery_tag'] = 'test'.$i;
+            $message->setDeliveryTag($i);
             $mockedMessages[] = $message;
         }
 
@@ -32,7 +32,7 @@ final class AmqpQueueConsumerTest extends TestCase
         $messages = $consumer->consume();
 
         for ($i = 0; $i < 3; $i++) {
-            self::assertSame($messages[$i]->getMessage(), 'test'.$i);
+            self::assertSame($messages[$i]->getMessage(), 'test'.($i+1));
         }
     }
 

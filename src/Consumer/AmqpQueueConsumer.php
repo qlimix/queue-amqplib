@@ -46,7 +46,7 @@ final class AmqpQueueConsumer implements ConsumerInterface
         $queueMessages = [];
         foreach ($amqpMessages as $amqpMessage) {
             $queueMessages[] = new QueueMessage(
-                $amqpMessage->delivery_info['delivery_tag'],
+                (string) $amqpMessage->getDeliveryTag(),
                 $amqpMessage->body
             );
         }
