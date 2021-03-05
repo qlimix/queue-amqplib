@@ -13,6 +13,7 @@ final class BatchChannelProvider implements ChannelProviderInterface
     private MessageCallback $messageCallback;
     private string $queue;
     private int $amount;
+
     private ?AMQPChannel $channel = null;
 
     public function __construct(

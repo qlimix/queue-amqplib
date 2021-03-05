@@ -2,13 +2,13 @@
 
 namespace Qlimix\Queue\Exchange\Callback;
 
-use Qlimix\Queue\Exchange\AmqpNegativeAcknowledgeInterface;
+use Qlimix\Queue\Exchange\AmqpNegativeAcknowledge;
 
 final class NackCallback
 {
-    private AmqpNegativeAcknowledgeInterface $negativeAcknowledge;
+    private AmqpNegativeAcknowledge $negativeAcknowledge;
 
-    public function __construct(AmqpNegativeAcknowledgeInterface $negativeAcknowledge)
+    public function __construct(AmqpNegativeAcknowledge $negativeAcknowledge)
     {
         $this->negativeAcknowledge = $negativeAcknowledge;
     }

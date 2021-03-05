@@ -15,14 +15,13 @@ final class AmqpFanoutBatchExchange implements BatchExchangeInterface
     private const TIMEOUT = 1;
 
     private ChannelProviderInterface $channelProvider;
-
-    private AmqpFailedMessagesHolderInterface $failedMessageHolder;
+    private AmqpFailedMessagesHolder $failedMessageHolder;
 
     private int $deliveryMode;
 
     public function __construct(
         ChannelProviderInterface $channelProvider,
-        AmqpFailedMessagesHolderInterface $failedMessageHolder,
+        AmqpFailedMessagesHolder $failedMessageHolder,
         int $deliveryMode
     ) {
         $this->channelProvider = $channelProvider;

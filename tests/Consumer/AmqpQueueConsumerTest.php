@@ -12,10 +12,7 @@ use Qlimix\Queue\Queue\QueueMessage;
 
 final class AmqpQueueConsumerTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function shouldConsume(): void
+    public function testShouldConsume(): void
     {
         $fetcher = $this->createMock(AmqpMessageFetcherInterface::class);
 
@@ -26,7 +23,7 @@ final class AmqpQueueConsumerTest extends TestCase
             $mockedMessages[] = $message;
         }
 
-        $fetcher->expects($this->once())
+        $fetcher->expects(self::once())
             ->method('fetch')
             ->willReturn($mockedMessages);
 
@@ -35,18 +32,15 @@ final class AmqpQueueConsumerTest extends TestCase
         $messages = $consumer->consume();
 
         for ($i = 0; $i < 3; $i++) {
-            $this->assertSame($messages[$i]->getMessage(), 'test'.$i);
+            self::assertSame($messages[$i]->getMessage(), 'test'.$i);
         }
     }
 
-    /**
-     * @test
-     */
-    public function shouldThrowOnConsumeException(): void
+    public function testShouldThrowOnConsumeException(): void
     {
         $fetcher = $this->createMock(AmqpMessageFetcherInterface::class);
 
-        $fetcher->expects($this->once())
+        $fetcher->expects(self::once())
             ->method('fetch')
             ->willThrowException(new Exception());
 
@@ -57,14 +51,11 @@ final class AmqpQueueConsumerTest extends TestCase
         $consumer->consume();
     }
 
-    /**
-     * @test
-     */
-    public function shouldAcknowledge(): void
+    public function testShouldAcknowledge(): void
     {
         $fetcher = $this->createMock(AmqpMessageFetcherInterface::class);
 
-        $fetcher->expects($this->once())
+        $fetcher->expects(self::once())
             ->method('acknowledge');
 
         $consumer = new AmqpQueueConsumer($fetcher);
@@ -72,14 +63,11 @@ final class AmqpQueueConsumerTest extends TestCase
         $consumer->acknowledge(new QueueMessage('1', 'message'));
     }
 
-    /**
-     * @test
-     */
-    public function shouldThrowOnAcknowledgeException(): void
+    public function testShouldThrowOnAcknowledgeException(): void
     {
         $fetcher = $this->createMock(AmqpMessageFetcherInterface::class);
 
-        $fetcher->expects($this->once())
+        $fetcher->expects(self::once())
             ->method('acknowledge')
             ->willThrowException(new ConsumerException());
 

@@ -3,13 +3,13 @@
 namespace Qlimix\Queue\Exchange\Callback;
 
 use PhpAmqpLib\Message\AMQPMessage;
-use Qlimix\Queue\Consumer\AmqpMessageHolderInterface;
+use Qlimix\Queue\Consumer\AmqpMessageHolder;
 
 final class MessageCallback
 {
-    private AmqpMessageHolderInterface $messageHolder;
+    private AmqpMessageHolder $messageHolder;
 
-    public function __construct(AmqpMessageHolderInterface $messageHolder)
+    public function __construct(AmqpMessageHolder $messageHolder)
     {
         $this->messageHolder = $messageHolder;
     }

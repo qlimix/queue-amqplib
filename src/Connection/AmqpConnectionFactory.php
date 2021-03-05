@@ -14,7 +14,7 @@ final class AmqpConnectionFactory implements AmqpConnectionFactoryInterface
     private string $user;
     private string $password;
 
-    private ?AMQPStreamConnection $connection;
+    private ?AMQPStreamConnection $connection = null;
 
     public function __construct(string $host, int $port, string $vhost, string $user, string $password)
     {

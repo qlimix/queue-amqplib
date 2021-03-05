@@ -11,26 +11,23 @@ use Qlimix\Queue\Connection\AmqpConnectionFactoryInterface;
 
 final class AmqpFanoutBindingTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function shouldBind(): void
+    public function testShouldBind(): void
     {
         $channel = $this->createMock(AMQPChannel::class);
 
-        $channel->expects($this->once())
+        $channel->expects(self::once())
             ->method('queue_bind')
             ->willReturn(null);
 
         $connection = $this->createMock(AMQPStreamConnection::class);
 
-        $connection->expects($this->once())
+        $connection->expects(self::once())
             ->method('channel')
             ->willReturn($channel);
 
         $factory = $this->createMock(AmqpConnectionFactoryInterface::class);
 
-        $factory->expects($this->once())
+        $factory->expects(self::once())
             ->method('getConnection')
             ->willReturn($connection);
 
@@ -38,14 +35,11 @@ final class AmqpFanoutBindingTest extends TestCase
         $binding->bind('exchange', 'queue');
     }
 
-    /**
-     * @test
-     */
-    public function shouldThrowOnException(): void
+    public function testShouldThrowOnException(): void
     {
         $factory = $this->createMock(AmqpConnectionFactoryInterface::class);
 
-        $factory->expects($this->once())
+        $factory->expects(self::once())
             ->method('getConnection')
             ->willThrowException(new Exception());
 

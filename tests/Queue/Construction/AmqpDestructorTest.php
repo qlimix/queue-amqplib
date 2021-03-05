@@ -12,25 +12,22 @@ use Qlimix\Queue\Queue\Construction\Exception\DestructorException;
 
 final class AmqpDestructorTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function shouldConstruct(): void
+    public function testShouldConstruct(): void
     {
         $channel = $this->createMock(AMQPChannel::class);
 
-        $channel->expects($this->once())
+        $channel->expects(self::once())
             ->method('queue_delete');
 
         $connection = $this->createMock(AMQPStreamConnection::class);
 
-        $connection->expects($this->once())
+        $connection->expects(self::once())
             ->method('channel')
             ->willReturn($channel);
 
         $factory = $this->createMock(AmqpConnectionFactoryInterface::class);
 
-        $factory->expects($this->once())
+        $factory->expects(self::once())
             ->method('getConnection')
             ->willReturn($connection);
 
@@ -39,14 +36,11 @@ final class AmqpDestructorTest extends TestCase
         $constructor->destruct('queue');
     }
 
-    /**
-     * @test
-     */
-    public function shouldThrowOnConnectionException(): void
+    public function testShouldThrowOnConnectionException(): void
     {
         $factory = $this->createMock(AmqpConnectionFactoryInterface::class);
 
-        $factory->expects($this->once())
+        $factory->expects(self::once())
             ->method('getConnection')
             ->willThrowException(new Exception());
 

@@ -14,7 +14,7 @@ final class DefaultExchangeProvider implements ChannelProviderInterface
     private AmqpConnectionFactoryInterface $connectionFactory;
     private NackCallback $nackCallback;
 
-    private ?AMQPChannel $channel;
+    private ?AMQPChannel $channel = null;
 
     public function __construct(AmqpConnectionFactoryInterface $connectionFactory, NackCallback $nackCallback)
     {

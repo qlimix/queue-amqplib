@@ -4,7 +4,7 @@ namespace Qlimix\Queue\Exchange;
 
 use function count;
 
-final class AmqpFailedMessagesHolder implements AmqpFailedMessagesHolderInterface
+final class AmqpFailedMessagesHolder
 {
     /** @var string[] */
     private array $messageIds = [];

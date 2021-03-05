@@ -8,10 +8,7 @@ use Qlimix\Queue\Connection\Exception\ConnectionException;
 
 final class AmqpConnectionFactoryTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function shouldCreateConnection(): void
+    public function testShouldCreateConnection(): void
     {
         $connectionFactory = new AmqpConnectionFactory(
             'localhost',

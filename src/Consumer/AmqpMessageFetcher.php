@@ -12,9 +12,9 @@ use Throwable;
 final class AmqpMessageFetcher implements AmqpMessageFetcherInterface
 {
     private ChannelProviderInterface $amqpChannelConfigurator;
-    private AmqpMessageHolderInterface $holder;
+    private AmqpMessageHolder $holder;
 
-    public function __construct(ChannelProviderInterface $amqpChannelConfigurator, AmqpMessageHolderInterface $holder)
+    public function __construct(ChannelProviderInterface $amqpChannelConfigurator, AmqpMessageHolder $holder)
     {
         $this->amqpChannelConfigurator = $amqpChannelConfigurator;
         $this->holder = $holder;

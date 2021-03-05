@@ -14,7 +14,7 @@ final class BatchExchangeChannelProvider implements ChannelProviderInterface
     private AmqpConnectionFactoryInterface $connectionFactory;
     private FailedCallback $failedCallBack;
 
-    private ?AMQPChannel $channel;
+    private ?AMQPChannel $channel = null;
 
     public function __construct(AmqpConnectionFactoryInterface $connectionFactory, FailedCallback $failedCallBack)
     {

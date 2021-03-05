@@ -15,14 +15,13 @@ final class AmqpDefaultExchange implements ExchangeInterface
     private const TIMEOUT = 1;
 
     private ChannelProviderInterface $channelProvider;
-
-    private AmqpNegativeAcknowledgeInterface $negativeAcknowledge;
+    private AmqpNegativeAcknowledge $negativeAcknowledge;
 
     private int $deliveryMode;
 
     public function __construct(
         ChannelProviderInterface $channelProvider,
-        AmqpNegativeAcknowledgeInterface $negativeAcknowledge,
+        AmqpNegativeAcknowledge $negativeAcknowledge,
         int $deliveryMode
     ) {
         $this->channelProvider = $channelProvider;
