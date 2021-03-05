@@ -7,7 +7,7 @@ use PhpAmqpLib\Message\AMQPMessage;
 final class AmqpMessageHolder implements AmqpMessageHolderInterface
 {
     /** @var AMQPMessage[] */
-    private $messages = [];
+    private array $messages = [];
 
     public function addMessage(AMQPMessage $message): void
     {
@@ -21,6 +21,7 @@ final class AmqpMessageHolder implements AmqpMessageHolderInterface
     {
         $messages = $this->messages;
         $this->messages = [];
+
         return $messages;
     }
 }

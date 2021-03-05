@@ -11,11 +11,8 @@ use Throwable;
 
 final class AmqpMessageFetcher implements AmqpMessageFetcherInterface
 {
-    /** @var ChannelProviderInterface */
-    private $amqpChannelConfigurator;
-
-    /** @var AmqpMessageHolderInterface */
-    private $holder;
+    private ChannelProviderInterface $amqpChannelConfigurator;
+    private AmqpMessageHolderInterface $holder;
 
     public function __construct(ChannelProviderInterface $amqpChannelConfigurator, AmqpMessageHolderInterface $holder)
     {
@@ -32,6 +29,7 @@ final class AmqpMessageFetcher implements AmqpMessageFetcherInterface
     {
         try {
             $this->amqpChannelConfigurator->getChannel()->wait(null, false, 0.1);
+
             return $this->holder->empty();
         } catch (AMQPTimeoutException $exception) {
             return $this->holder->empty();

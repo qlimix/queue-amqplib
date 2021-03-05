@@ -11,14 +11,10 @@ use Throwable;
 
 final class DefaultExchangeProvider implements ChannelProviderInterface
 {
-    /** @var AmqpConnectionFactoryInterface */
-    private $connectionFactory;
+    private AmqpConnectionFactoryInterface $connectionFactory;
+    private NackCallback $nackCallback;
 
-    /** @var NackCallback */
-    private $nackCallback;
-
-    /** @var AMQPChannel */
-    private $channel;
+    private ?AMQPChannel $channel;
 
     public function __construct(AmqpConnectionFactoryInterface $connectionFactory, NackCallback $nackCallback)
     {

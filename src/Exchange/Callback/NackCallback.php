@@ -6,8 +6,7 @@ use Qlimix\Queue\Exchange\AmqpNegativeAcknowledgeInterface;
 
 final class NackCallback
 {
-    /** @var AmqpNegativeAcknowledgeInterface */
-    private $negativeAcknowledge;
+    private AmqpNegativeAcknowledgeInterface $negativeAcknowledge;
 
     public function __construct(AmqpNegativeAcknowledgeInterface $negativeAcknowledge)
     {

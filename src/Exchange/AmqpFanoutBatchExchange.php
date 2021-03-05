@@ -14,14 +14,11 @@ final class AmqpFanoutBatchExchange implements BatchExchangeInterface
 {
     private const TIMEOUT = 1;
 
-    /** @var ChannelProviderInterface */
-    private $channelProvider;
+    private ChannelProviderInterface $channelProvider;
 
-    /** @var AmqpFailedMessagesHolderInterface */
-    private $failedMessageHolder;
+    private AmqpFailedMessagesHolderInterface $failedMessageHolder;
 
-    /** @var int */
-    private $deliveryMode;
+    private int $deliveryMode;
 
     public function __construct(
         ChannelProviderInterface $channelProvider,
@@ -69,6 +66,7 @@ final class AmqpFanoutBatchExchange implements BatchExchangeInterface
 
         if ($this->failedMessageHolder->hasFailed()) {
             $this->failedMessageHolder->reset();
+
             throw new UnacknowledgedException('Message were not acknowledged by the server');
         }
     }

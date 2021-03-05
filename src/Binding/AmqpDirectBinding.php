@@ -8,11 +8,8 @@ use Throwable;
 
 final class AmqpDirectBinding implements BindingInterface
 {
-    /** @var AmqpConnectionFactoryInterface */
-    private $connectionFactory;
-
-    /** @var string */
-    private $routingKey;
+    private AmqpConnectionFactoryInterface $connectionFactory;
+    private string $routingKey;
 
     public function __construct(AmqpConnectionFactoryInterface $connectionFactory, string $routingKey = '')
     {

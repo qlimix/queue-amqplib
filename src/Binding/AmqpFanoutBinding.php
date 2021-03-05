@@ -8,8 +8,7 @@ use Throwable;
 
 final class AmqpFanoutBinding implements BindingInterface
 {
-    /** @var AmqpConnectionFactoryInterface */
-    private $connectionFactory;
+    private AmqpConnectionFactoryInterface $connectionFactory;
 
     public function __construct(AmqpConnectionFactoryInterface $connectionFactory)
     {

@@ -7,7 +7,7 @@ use function count;
 final class AmqpFailedMessagesHolder implements AmqpFailedMessagesHolderInterface
 {
     /** @var string[] */
-    private $messageIds = [];
+    private array $messageIds = [];
 
     public function hasFailed(): bool
     {

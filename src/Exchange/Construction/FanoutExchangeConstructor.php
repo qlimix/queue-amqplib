@@ -9,11 +9,8 @@ use Throwable;
 
 final class FanoutExchangeConstructor implements ConstructorInterface
 {
-    /** @var AmqpConnectionFactoryInterface */
-    private $connectionFactory;
-
-    /** @var AMQPExchangeOptions */
-    private $options;
+    private AmqpConnectionFactoryInterface $connectionFactory;
+    private AMQPExchangeOptions $options;
 
     public function __construct(AmqpConnectionFactoryInterface $connectionFactory, AMQPExchangeOptions $options)
     {

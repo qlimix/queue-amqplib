@@ -7,8 +7,7 @@ use Qlimix\Queue\Exchange\AmqpFailedMessagesHolderInterface;
 
 final class FailedCallback
 {
-    /** @var AmqpFailedMessagesHolderInterface */
-    private $failedMessageHolder;
+    private AmqpFailedMessagesHolderInterface $failedMessageHolder;
 
     public function __construct(AmqpFailedMessagesHolderInterface $failedMessageHolder)
     {

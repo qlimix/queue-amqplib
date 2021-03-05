@@ -7,8 +7,7 @@ use Qlimix\Queue\Consumer\AmqpMessageHolderInterface;
 
 final class MessageCallback
 {
-    /** @var AmqpMessageHolderInterface */
-    private $messageHolder;
+    private AmqpMessageHolderInterface $messageHolder;
 
     public function __construct(AmqpMessageHolderInterface $messageHolder)
     {
