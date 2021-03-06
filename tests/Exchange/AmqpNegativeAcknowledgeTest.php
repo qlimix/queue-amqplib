@@ -7,10 +7,7 @@ use Qlimix\Queue\Exchange\AmqpNegativeAcknowledge;
 
 final class AmqpNegativeAcknowledgeTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function shouldNegativeAcknowledge(): void
+    public function testShouldNegativeAcknowledge(): void
     {
         $negativeAcknowledge = new AmqpNegativeAcknowledge();
         $negativeAcknowledge->nack();
@@ -18,10 +15,7 @@ final class AmqpNegativeAcknowledgeTest extends TestCase
         $this->assertTrue($negativeAcknowledge->has());
     }
 
-    /**
-     * @test
-     */
-    public function shouldResetNegativeAcknowledge(): void
+    public function testShouldResetNegativeAcknowledge(): void
     {
         $negativeAcknowledge = new AmqpNegativeAcknowledge();
         $negativeAcknowledge->nack();
@@ -30,10 +24,7 @@ final class AmqpNegativeAcknowledgeTest extends TestCase
         $this->assertFalse($negativeAcknowledge->has());
     }
 
-    /**
-     * @test
-     */
-    public function shouldNotBeNegativelyAcknowledgeByDefault(): void
+    public function testShouldNotBeNegativelyAcknowledgeByDefault(): void
     {
         $negativeAcknowledge = new AmqpNegativeAcknowledge();
 

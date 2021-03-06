@@ -7,27 +7,24 @@ use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PHPUnit\Framework\TestCase;
 use Qlimix\Queue\Channel\Consumer\BatchChannelProvider;
 use Qlimix\Queue\Connection\AmqpConnectionFactoryInterface;
-use Qlimix\Queue\Consumer\AmqpMessageHolderInterface;
+use Qlimix\Queue\Consumer\AmqpMessageHolder;
 use Qlimix\Queue\Exchange\Callback\MessageCallback;
 
 final class BatchChannelProviderTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function shouldProvide(): void
+    public function testShouldProvide(): void
     {
         $fetchAmount = 10;
         $configuredQueue = 'test';
         $channel = $this->createMock(AMQPChannel::class);
 
-        $channel->expects($this->once())
+        $channel->expects(self::once())
             ->method('basic_qos')
             ->willReturnCallback(static function ($size, $amount, $global) use ($fetchAmount) {
                 return $size === 0 && $amount !== $fetchAmount && $global !== false;
             });
 
-        $channel->expects($this->once())
+        $channel->expects(self::once())
             ->method('basic_consume')
             ->willReturnCallback(static function ($queue) use ($configuredQueue) {
                     return $queue === $configuredQueue;
@@ -35,46 +32,41 @@ final class BatchChannelProviderTest extends TestCase
 
         $connection = $this->createMock(AMQPStreamConnection::class);
 
-        $connection->expects($this->once())
+        $connection->expects(self::once())
             ->method('channel')
             ->willReturn($channel);
 
         $factory = $this->createMock(AmqpConnectionFactoryInterface::class);
 
-        $factory->expects($this->once())
+        $factory->expects(self::once())
             ->method('getConnection')
             ->willReturn($connection);
 
-        $holder = $this->createMock(AmqpMessageHolderInterface::class);
-
         $batchChannelProvider = new BatchChannelProvider(
             $factory,
-            new MessageCallback($holder),
+            new MessageCallback(new AmqpMessageHolder()),
             $configuredQueue,
             $fetchAmount
         );
 
         $amqpChannel = $batchChannelProvider->getChannel();
 
-        $this->assertSame($amqpChannel, $channel);
+        self::assertSame($amqpChannel, $channel);
     }
 
-    /**
-     * @test
-     */
-    public function shouldNotRecreateChannel(): void
+    public function testShouldNotRecreateChannel(): void
     {
         $fetchAmount = 10;
         $configuredQueue = 'test';
         $channel = $this->createMock(AMQPChannel::class);
 
-        $channel->expects($this->once())
+        $channel->expects(self::once())
             ->method('basic_qos')
             ->willReturnCallback(static function ($size, $amount, $global) use ($fetchAmount) {
                 return $size === 0 && $amount !== $fetchAmount && $global !== false;
             });
 
-        $channel->expects($this->once())
+        $channel->expects(self::once())
             ->method('basic_consume')
             ->willReturnCallback(static function ($queue) use ($configuredQueue) {
                     return $queue === $configuredQueue;
@@ -82,21 +74,19 @@ final class BatchChannelProviderTest extends TestCase
 
         $connection = $this->createMock(AMQPStreamConnection::class);
 
-        $connection->expects($this->once())
+        $connection->expects(self::once())
             ->method('channel')
             ->willReturn($channel);
 
         $factory = $this->createMock(AmqpConnectionFactoryInterface::class);
 
-        $factory->expects($this->once())
+        $factory->expects(self::once())
             ->method('getConnection')
             ->willReturn($connection);
 
-        $holder = $this->createMock(AmqpMessageHolderInterface::class);
-
         $batchChannelConfigurator = new BatchChannelProvider(
             $factory,
-            new MessageCallback($holder),
+            new MessageCallback(new AmqpMessageHolder()),
             $configuredQueue,
             $fetchAmount
         );
@@ -104,6 +94,6 @@ final class BatchChannelProviderTest extends TestCase
         $batchChannelConfigurator->getChannel();
         $amqpChannel = $batchChannelConfigurator->getChannel();
 
-        $this->assertSame($amqpChannel, $channel);
+        self::assertSame($amqpChannel, $channel);
     }
 }

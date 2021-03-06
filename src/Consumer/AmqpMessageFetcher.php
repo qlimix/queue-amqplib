@@ -11,13 +11,10 @@ use Throwable;
 
 final class AmqpMessageFetcher implements AmqpMessageFetcherInterface
 {
-    /** @var ChannelProviderInterface */
-    private $amqpChannelConfigurator;
+    private ChannelProviderInterface $amqpChannelConfigurator;
+    private AmqpMessageHolder $holder;
 
-    /** @var AmqpMessageHolderInterface */
-    private $holder;
-
-    public function __construct(ChannelProviderInterface $amqpChannelConfigurator, AmqpMessageHolderInterface $holder)
+    public function __construct(ChannelProviderInterface $amqpChannelConfigurator, AmqpMessageHolder $holder)
     {
         $this->amqpChannelConfigurator = $amqpChannelConfigurator;
         $this->holder = $holder;
@@ -32,6 +29,7 @@ final class AmqpMessageFetcher implements AmqpMessageFetcherInterface
     {
         try {
             $this->amqpChannelConfigurator->getChannel()->wait(null, false, 0.1);
+
             return $this->holder->empty();
         } catch (AMQPTimeoutException $exception) {
             return $this->holder->empty();
@@ -46,7 +44,7 @@ final class AmqpMessageFetcher implements AmqpMessageFetcherInterface
     public function acknowledge(QueueMessage $message): void
     {
         try {
-            $this->amqpChannelConfigurator->getChannel()->basic_ack($message->getId());
+            $this->amqpChannelConfigurator->getChannel()->basic_ack((int) $message->getId());
         } catch (Throwable $exception) {
             throw new ConsumerException('Failed to acknowledge message', 0, $exception);
         }

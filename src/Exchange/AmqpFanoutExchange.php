@@ -14,18 +14,14 @@ final class AmqpFanoutExchange implements ExchangeInterface
 {
     private const TIMEOUT = 1;
 
-    /** @var ChannelProviderInterface */
-    private $channelProvider;
+    private ChannelProviderInterface $channelProvider;
+    private AmqpNegativeAcknowledge $negativeAcknowledge;
 
-    /** @var AmqpNegativeAcknowledgeInterface */
-    private $negativeAcknowledge;
-
-    /** @var int */
-    private $deliveryMode;
+    private int $deliveryMode;
 
     public function __construct(
         ChannelProviderInterface $channelProvider,
-        AmqpNegativeAcknowledgeInterface $negativeAcknowledge,
+        AmqpNegativeAcknowledge $negativeAcknowledge,
         int $deliveryMode
     ) {
         $this->channelProvider = $channelProvider;
@@ -60,6 +56,7 @@ final class AmqpFanoutExchange implements ExchangeInterface
 
         if ($this->negativeAcknowledge->has()) {
             $this->negativeAcknowledge->reset();
+
             throw new UnacknowledgedException('Message was not acknowledged by the server');
         }
     }

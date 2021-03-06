@@ -11,14 +11,10 @@ use Throwable;
 
 final class BatchExchangeChannelProvider implements ChannelProviderInterface
 {
-    /** @var AmqpConnectionFactoryInterface */
-    private $connectionFactory;
+    private AmqpConnectionFactoryInterface $connectionFactory;
+    private FailedCallback $failedCallBack;
 
-    /** @var FailedCallback */
-    private $failedCallBack;
-
-    /** @var AMQPChannel */
-    private $channel;
+    private ?AMQPChannel $channel = null;
 
     public function __construct(AmqpConnectionFactoryInterface $connectionFactory, FailedCallback $failedCallBack)
     {

@@ -8,8 +8,7 @@ use Throwable;
 
 final class AmqpDestructor implements DestructorInterface
 {
-    /** @var AmqpConnectionFactoryInterface */
-    private $connectionFactory;
+    private AmqpConnectionFactoryInterface $connectionFactory;
 
     public function __construct(AmqpConnectionFactoryInterface $connectionFactory)
     {

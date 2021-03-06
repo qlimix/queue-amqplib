@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 use Qlimix\Queue\Channel\ChannelProviderInterface;
 use Qlimix\Queue\Channel\Exception\ChannelProviderException;
 use Qlimix\Queue\Exchange\AmqpDefaultExchange;
-use Qlimix\Queue\Exchange\AmqpNegativeAcknowledgeInterface;
+use Qlimix\Queue\Exchange\AmqpNegativeAcknowledge;
 use Qlimix\Queue\Exchange\Exception\ExchangeException;
 use Qlimix\Queue\Exchange\Exception\TimeOutException;
 use Qlimix\Queue\Exchange\Exception\UnacknowledgedException;
@@ -17,24 +17,18 @@ use Qlimix\Queue\Exchange\ExchangeMessage;
 
 final class AmqpDefaultExchangeTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function shouldExchange(): void
+    public function testShouldExchange(): void
     {
         $channel = $this->createMock(AMQPChannel::class);
 
-        $channel->expects($this->once())
+        $channel->expects(self::once())
             ->method('basic_publish');
 
-        $negativeAcknowledge = $this->createMock(AmqpNegativeAcknowledgeInterface::class);
-
-        $negativeAcknowledge->expects($this->once())
-            ->method('has');
+        $negativeAcknowledge = new AmqpNegativeAcknowledge();
 
         $channelProvider = $this->createMock(ChannelProviderInterface::class);
 
-        $channelProvider->expects($this->once())
+        $channelProvider->expects(self::once())
             ->method('getChannel')
             ->willReturn($channel);
 
@@ -47,25 +41,22 @@ final class AmqpDefaultExchangeTest extends TestCase
         $exchange->exchange(new ExchangeMessage('route', 'message'));
     }
 
-    /**
-     * @test
-     */
-    public function shouldThrowOnTimeout(): void
+    public function testShouldThrowOnTimeout(): void
     {
         $channel = $this->createMock(AMQPChannel::class);
 
-        $channel->expects($this->once())
+        $channel->expects(self::once())
             ->method('basic_publish');
 
-        $channel->expects($this->once())
+        $channel->expects(self::once())
             ->method('wait_for_pending_acks_returns')
             ->willThrowException(new AMQPTimeoutException());
 
-        $negativeAcknowledge = $this->createMock(AmqpNegativeAcknowledgeInterface::class);
+        $negativeAcknowledge = new AmqpNegativeAcknowledge();
 
         $channelProvider = $this->createMock(ChannelProviderInterface::class);
 
-        $channelProvider->expects($this->once())
+        $channelProvider->expects(self::once())
             ->method('getChannel')
             ->willReturn($channel);
 
@@ -80,33 +71,24 @@ final class AmqpDefaultExchangeTest extends TestCase
         $exchange->exchange(new ExchangeMessage('route', 'message'));
     }
 
-    /**
-     * @test
-     */
-    public function shouldThrowOnNegativeAcknowledge(): void
+    public function testShouldThrowOnNegativeAcknowledge(): void
     {
         $channel = $this->createMock(AMQPChannel::class);
 
-        $channel->expects($this->once())
+        $channel->expects(self::once())
             ->method('basic_publish');
 
-        $channel->expects($this->once())
+        $channel->expects(self::once())
             ->method('wait_for_pending_acks_returns');
 
         $channelProvider = $this->createMock(ChannelProviderInterface::class);
 
-        $channelProvider->expects($this->once())
+        $channelProvider->expects(self::once())
             ->method('getChannel')
             ->willReturn($channel);
 
-        $negativeAcknowledge = $this->createMock(AmqpNegativeAcknowledgeInterface::class);
-
-        $negativeAcknowledge->expects($this->once())
-            ->method('has')
-            ->willReturn(true);
-
-        $negativeAcknowledge->expects($this->once())
-            ->method('reset');
+        $negativeAcknowledge = new AmqpNegativeAcknowledge();
+        $negativeAcknowledge->nack();
 
         $exchange = new AmqpDefaultExchange(
             $channelProvider,
@@ -119,18 +101,15 @@ final class AmqpDefaultExchangeTest extends TestCase
         $exchange->exchange(new ExchangeMessage('route', 'message'));
     }
 
-    /**
-     * @test
-     */
-    public function shouldThrowOnConnectionFailure(): void
+    public function testShouldThrowOnConnectionFailure(): void
     {
         $channelProvider = $this->createMock(ChannelProviderInterface::class);
 
-        $channelProvider->expects($this->once())
+        $channelProvider->expects(self::once())
             ->method('getChannel')
             ->willThrowException(new ChannelProviderException());
 
-        $failedMessageHolder = $this->createMock(AmqpNegativeAcknowledgeInterface::class);
+        $failedMessageHolder = new AmqpNegativeAcknowledge();
 
         $exchange = new AmqpDefaultExchange(
             $channelProvider,

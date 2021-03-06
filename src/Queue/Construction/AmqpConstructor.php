@@ -8,11 +8,8 @@ use Throwable;
 
 final class AmqpConstructor implements ConstructorInterface
 {
-    /** @var AmqpConnectionFactoryInterface */
-    private $connectionFactory;
-
-    /** @var AmqpQueueOptions */
-    private $options;
+    private AmqpConnectionFactoryInterface $connectionFactory;
+    private AmqpQueueOptions $options;
 
     public function __construct(AmqpConnectionFactoryInterface $connectionFactory, AmqpQueueOptions $options)
     {

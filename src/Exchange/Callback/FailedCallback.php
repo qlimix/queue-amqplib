@@ -3,14 +3,13 @@
 namespace Qlimix\Queue\Exchange\Callback;
 
 use PhpAmqpLib\Message\AMQPMessage;
-use Qlimix\Queue\Exchange\AmqpFailedMessagesHolderInterface;
+use Qlimix\Queue\Exchange\AmqpFailedMessagesHolder;
 
 final class FailedCallback
 {
-    /** @var AmqpFailedMessagesHolderInterface */
-    private $failedMessageHolder;
+    private AmqpFailedMessagesHolder $failedMessageHolder;
 
-    public function __construct(AmqpFailedMessagesHolderInterface $failedMessageHolder)
+    public function __construct(AmqpFailedMessagesHolder $failedMessageHolder)
     {
         $this->failedMessageHolder = $failedMessageHolder;
     }

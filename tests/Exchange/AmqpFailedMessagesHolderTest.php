@@ -7,10 +7,7 @@ use Qlimix\Queue\Exchange\AmqpFailedMessagesHolder;
 
 final class AmqpFailedMessagesHolderTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function shouldFailMessages(): void
+    public function testShouldFailMessages(): void
     {
         $failedMessages = new AmqpFailedMessagesHolder();
         $failedMessages->fail('test');
@@ -18,10 +15,7 @@ final class AmqpFailedMessagesHolderTest extends TestCase
         $this->assertTrue($failedMessages->hasFailed());
     }
 
-    /**
-     * @test
-     */
-    public function shouldResetNegativeAcknowledge(): void
+    public function testShouldResetNegativeAcknowledge(): void
     {
         $failedMessages = new AmqpFailedMessagesHolder();
         $failedMessages->fail('test');
@@ -30,10 +24,7 @@ final class AmqpFailedMessagesHolderTest extends TestCase
         $this->assertFalse($failedMessages->hasFailed());
     }
 
-    /**
-     * @test
-     */
-    public function shouldNotBeNegativelyAcknowledgeByDefault(): void
+    public function testShouldNotBeNegativelyAcknowledgeByDefault(): void
     {
         $failedMessages = new AmqpFailedMessagesHolder();
 

@@ -8,10 +8,7 @@ use Qlimix\Queue\Consumer\AmqpMessageHolder;
 
 final class AmqpMessageHolderTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function shouldHoldMessages(): void
+    public function testShouldHoldMessages(): void
     {
         $holder = new AmqpMessageHolder();
 
@@ -22,14 +19,11 @@ final class AmqpMessageHolderTest extends TestCase
         $messages = $holder->empty();
 
         for ($i = 0; $i < 3; $i++) {
-            $this->assertSame($messages[$i]->body, 'test'.$i);
+            self::assertSame($messages[$i]->body, 'test'.$i);
         }
     }
 
-    /**
-     * @test
-     */
-    public function shouldEmptyOnEmpty(): void
+    public function testShouldEmptyOnEmpty(): void
     {
         $holder = new AmqpMessageHolder();
 
@@ -40,6 +34,6 @@ final class AmqpMessageHolderTest extends TestCase
         $holder->empty();
         $messages = $holder->empty();
 
-        $this->assertSame([], $messages);
+        self::assertSame([], $messages);
     }
 }

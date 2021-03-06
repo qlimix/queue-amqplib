@@ -3,22 +3,18 @@
 namespace Qlimix\Tests\Queue\Exchange\Callback;
 
 use PHPUnit\Framework\TestCase;
-use Qlimix\Queue\Exchange\AmqpNegativeAcknowledgeInterface;
+use Qlimix\Queue\Exchange\AmqpNegativeAcknowledge;
 use Qlimix\Queue\Exchange\Callback\NackCallback;
 
 final class NackCallbackTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function shouldCallback(): void
+    public function testShouldCallback(): void
     {
-        $messageHolder = $this->createMock(AmqpNegativeAcknowledgeInterface::class);
-
-        $messageHolder->expects($this->once())
-            ->method('nack');
+        $messageHolder = new AmqpNegativeAcknowledge();
 
         $callback = new NackCallback($messageHolder);
         $callback->callback();
+
+        self::assertTrue($messageHolder->has());
     }
 }

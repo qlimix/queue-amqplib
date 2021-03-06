@@ -9,20 +9,12 @@ use Qlimix\Queue\Exchange\Callback\MessageCallback;
 
 final class BatchChannelProvider implements ChannelProviderInterface
 {
-    /** @var AmqpConnectionFactoryInterface */
-    private $connectionFactory;
+    private AmqpConnectionFactoryInterface $connectionFactory;
+    private MessageCallback $messageCallback;
+    private string $queue;
+    private int $amount;
 
-    /** @var MessageCallback */
-    private $messageCallback;
-
-    /** @var string */
-    private $queue;
-
-    /** @var int */
-    private $amount;
-
-    /** @var AMQPChannel|null */
-    private $channel;
+    private ?AMQPChannel $channel = null;
 
     public function __construct(
         AmqpConnectionFactoryInterface $connectionFactory,

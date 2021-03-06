@@ -9,8 +9,7 @@ use Throwable;
 
 final class AmqpQueueConsumer implements ConsumerInterface
 {
-    /** @var AmqpMessageFetcherInterface */
-    private $fetcher;
+    private AmqpMessageFetcherInterface $fetcher;
 
     public function __construct(AmqpMessageFetcherInterface $fetcher)
     {
@@ -47,7 +46,7 @@ final class AmqpQueueConsumer implements ConsumerInterface
         $queueMessages = [];
         foreach ($amqpMessages as $amqpMessage) {
             $queueMessages[] = new QueueMessage(
-                $amqpMessage->delivery_info['delivery_tag'],
+                (string) $amqpMessage->getDeliveryTag(),
                 $amqpMessage->body
             );
         }

@@ -2,10 +2,9 @@
 
 namespace Qlimix\Queue\Exchange;
 
-final class AmqpNegativeAcknowledge implements AmqpNegativeAcknowledgeInterface
+final class AmqpNegativeAcknowledge
 {
-    /** @var bool */
-    private $nacked = false;
+    private bool $nacked = false;
 
     public function nack(): void
     {

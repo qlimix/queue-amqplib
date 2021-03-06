@@ -9,7 +9,7 @@ use PhpAmqpLib\Message\AMQPMessage;
 use PHPUnit\Framework\TestCase;
 use Qlimix\Queue\Channel\ChannelProviderInterface;
 use Qlimix\Queue\Channel\Exception\ChannelProviderException;
-use Qlimix\Queue\Exchange\AmqpFailedMessagesHolderInterface;
+use Qlimix\Queue\Exchange\AmqpFailedMessagesHolder;
 use Qlimix\Queue\Exchange\AmqpFanoutBatchExchange;
 use Qlimix\Queue\Exchange\Exception\ExchangeException;
 use Qlimix\Queue\Exchange\Exception\TimeOutException;
@@ -18,30 +18,24 @@ use Qlimix\Queue\Exchange\ExchangeMessage;
 
 final class AmqpFanoutBatchExchangeTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function shouldBatchExchange(): void
+    public function testShouldBatchExchange(): void
     {
         $channel = $this->createMock(AMQPChannel::class);
 
-        $channel->expects($this->exactly(3))
+        $channel->expects(self::exactly(3))
             ->method('batch_basic_publish');
 
-        $channel->expects($this->once())
+        $channel->expects(self::once())
             ->method('publish_batch');
 
-        $channel->expects($this->once())
+        $channel->expects(self::once())
             ->method('wait_for_pending_acks_returns');
 
-        $failedMessageHolder = $this->createMock(AmqpFailedMessagesHolderInterface::class);
-
-        $failedMessageHolder->expects($this->once())
-            ->method('hasFailed');
+        $failedMessageHolder = new AmqpFailedMessagesHolder();
 
         $channelProvider = $this->createMock(ChannelProviderInterface::class);
 
-        $channelProvider->expects($this->once())
+        $channelProvider->expects(self::once())
             ->method('getChannel')
             ->willReturn($channel);
 
@@ -59,29 +53,27 @@ final class AmqpFanoutBatchExchangeTest extends TestCase
     }
 
     /**
-     * @test
+     *
+    public function testShould
      */
     public function ShouldNotRecreateChannel(): void
     {
         $channel = $this->createMock(AMQPChannel::class);
 
-        $channel->expects($this->exactly(6))
+        $channel->expects(self::exactly(6))
             ->method('batch_basic_publish');
 
-        $channel->expects($this->exactly(2))
+        $channel->expects(self::exactly(2))
             ->method('publish_batch');
 
-        $channel->expects($this->exactly(2))
+        $channel->expects(self::exactly(2))
             ->method('wait_for_pending_acks_returns');
 
-        $failedMessageHolder = $this->createMock(AmqpFailedMessagesHolderInterface::class);
-
-        $failedMessageHolder->expects($this->exactly(2))
-            ->method('hasFailed');
+        $failedMessageHolder = new AmqpFailedMessagesHolder();
 
         $channelProvider = $this->createMock(ChannelProviderInterface::class);
 
-        $channelProvider->expects($this->exactly(2))
+        $channelProvider->expects(self::exactly(2))
             ->method('getChannel')
             ->willReturn($channel);
 
@@ -104,27 +96,24 @@ final class AmqpFanoutBatchExchangeTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
-    public function shouldThrowOnPublishException(): void
+    public function testShouldThrowOnPublishException(): void
     {
         $channel = $this->createMock(AMQPChannel::class);
 
-        $channel->expects($this->exactly(3))
+        $channel->expects(self::exactly(3))
             ->method('batch_basic_publish');
 
-        $channel->expects($this->once())
+        $channel->expects(self::once())
             ->method('publish_batch')
             ->willThrowException(new Exception());
 
         $channelProvider = $this->createMock(ChannelProviderInterface::class);
 
-        $channelProvider->expects($this->once())
+        $channelProvider->expects(self::once())
             ->method('getChannel')
             ->willReturn($channel);
 
-        $failedMessageHolder = $this->createMock(AmqpFailedMessagesHolderInterface::class);
+        $failedMessageHolder = new AmqpFailedMessagesHolder();
 
         $exchange = new AmqpFanoutBatchExchange(
             $channelProvider,
@@ -141,30 +130,27 @@ final class AmqpFanoutBatchExchangeTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
-    public function shouldThrowOnTimeOutException(): void
+    public function testShouldThrowOnTimeOutException(): void
     {
         $channel = $this->createMock(AMQPChannel::class);
 
-        $channel->expects($this->exactly(3))
+        $channel->expects(self::exactly(3))
             ->method('batch_basic_publish');
 
-        $channel->expects($this->once())
+        $channel->expects(self::once())
             ->method('publish_batch');
 
-        $channel->expects($this->once())
+        $channel->expects(self::once())
             ->method('wait_for_pending_acks_returns')
             ->willThrowException(new AMQPTimeoutException());
 
         $channelProvider = $this->createMock(ChannelProviderInterface::class);
 
-        $channelProvider->expects($this->once())
+        $channelProvider->expects(self::once())
             ->method('getChannel')
             ->willReturn($channel);
 
-        $failedMessageHolder = $this->createMock(AmqpFailedMessagesHolderInterface::class);
+        $failedMessageHolder = new AmqpFailedMessagesHolder();
 
         $exchange = new AmqpFanoutBatchExchange(
             $channelProvider,
@@ -181,36 +167,27 @@ final class AmqpFanoutBatchExchangeTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
-    public function shouldThrowOnFailedMessages(): void
+    public function testShouldThrowOnFailedMessages(): void
     {
         $channel = $this->createMock(AMQPChannel::class);
 
-        $channel->expects($this->exactly(3))
+        $channel->expects(self::exactly(3))
             ->method('batch_basic_publish');
 
-        $channel->expects($this->once())
+        $channel->expects(self::once())
             ->method('publish_batch');
 
-        $channel->expects($this->once())
+        $channel->expects(self::once())
             ->method('wait_for_pending_acks_returns');
 
         $channelProvider = $this->createMock(ChannelProviderInterface::class);
 
-        $channelProvider->expects($this->once())
+        $channelProvider->expects(self::once())
             ->method('getChannel')
             ->willReturn($channel);
 
-        $failedMessageHolder = $this->createMock(AmqpFailedMessagesHolderInterface::class);
-
-        $failedMessageHolder->expects($this->once())
-            ->method('hasFailed')
-            ->willReturn(true);
-
-        $failedMessageHolder->expects($this->once())
-            ->method('reset');
+        $failedMessageHolder = new AmqpFailedMessagesHolder();
+        $failedMessageHolder->fail('123');
 
         $exchange = new AmqpFanoutBatchExchange(
             $channelProvider,
@@ -227,18 +204,15 @@ final class AmqpFanoutBatchExchangeTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
-    public function shouldThrowOnConnectionFailure(): void
+    public function testShouldThrowOnConnectionFailure(): void
     {
         $channelProvider = $this->createMock(ChannelProviderInterface::class);
 
-        $channelProvider->expects($this->once())
+        $channelProvider->expects(self::once())
             ->method('getChannel')
             ->willThrowException(new ChannelProviderException());
 
-        $failedMessageHolder = $this->createMock(AmqpFailedMessagesHolderInterface::class);
+        $failedMessageHolder = new AmqpFailedMessagesHolder();
 
         $exchange = new AmqpFanoutBatchExchange(
             $channelProvider,

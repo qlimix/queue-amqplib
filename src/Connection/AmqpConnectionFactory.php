@@ -8,23 +8,13 @@ use Throwable;
 
 final class AmqpConnectionFactory implements AmqpConnectionFactoryInterface
 {
-    /** @var string */
-    private $host;
+    private string $host;
+    private int $port;
+    private string $vhost;
+    private string $user;
+    private string $password;
 
-    /** @var int */
-    private $port;
-
-    /** @var string */
-    private $vhost;
-
-    /** @var string */
-    private $user;
-
-    /** @var string */
-    private $password;
-
-    /** @var AMQPStreamConnection */
-    private $connection;
+    private ?AMQPStreamConnection $connection = null;
 
     public function __construct(string $host, int $port, string $vhost, string $user, string $password)
     {

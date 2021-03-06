@@ -4,17 +4,12 @@ namespace Qlimix\Queue\Queue\Construction;
 
 final class AmqpQueueOptions
 {
-    /** @var bool */
-    private $passive;
-
-    /** @var bool */
-    private $durable;
-
-    /** @var bool */
-    private $autoDelete;
+    private bool $passive;
+    private bool $durable;
+    private bool $autoDelete;
 
     /** @var mixed[] */
-    private $options;
+    private array $options;
 
     /**
      * @param mixed[] $options
